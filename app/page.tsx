@@ -47,14 +47,13 @@ function Player({id}: {id: string}) {
         if (event.code === "KeyA") {
             set_x(x - 5);
         }
-        
     }, []);
 
     return (
         <>
             <span
                 ref={elem}
-                className="absolute"
+                className="absolute outline-none"
                 style={{
                     transform: `translate3d(${x}px, ${y}px, 0px)`,
                     willChange: `transform`,
