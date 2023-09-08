@@ -89,7 +89,7 @@ export default function Home() {
         {/* <Player
             id={"player-1"}
         /> */}
-        <Projectile />
+        <Projectile startX={150} startY={150} />
     </main>
   )
 }
