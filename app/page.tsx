@@ -1,6 +1,7 @@
 'use client'
 
 import React from "react";
+import Image from "next/image";
 import Projectile from "./shooting";
 
 function Player({id}: {id: string}) {
@@ -50,8 +51,9 @@ function Player({id}: {id: string}) {
                 }}
                 onKeyDown={(event) => {handleKeydown(event, x, y)}}
                 tabIndex={0}
+                
             >
-                {id}
+                <Image src={"/img/Boat_vertical_test.png"} alt={""} width={160} height={160}/>
             </span>
         </>
     );
