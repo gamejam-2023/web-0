@@ -1,12 +1,22 @@
 'use client'
 
-import React from "react";
+import React, { ReactHTMLElement } from "react";
 import Image from "next/image";
 import Projectile from "./shooting";
+import {Input} from "../lib/Input.js";
 
 function Player({id}: {id: string}) {
+    const elem = React.useRef<HTMLElement>(null);
     const [x, set_x] = React.useState(0);
     const [y, set_y] = React.useState(0);
+
+    // React.useEffect(() => {
+    //     var elem_input = Input(elem);
+
+    //     elem_input.watch("print_5", function() {
+    //         console.log(1);
+    //     }, "Control", "5");
+    // }, []);
 
     // React.useEffect(() => {
     //     document.addEventListener('keydown', (event) => {
@@ -43,15 +53,15 @@ function Player({id}: {id: string}) {
     return (
         <>
             <span
+                ref={elem}
                 className="absolute"
                 style={{
                     transform: `translate3d(${x}px, ${y}px, 0px)`,
                     willChange: `transform`,
-                    transition: `transform 100ms ease`
+                    transition: `transform 100ms ease`,
                 }}
                 onKeyDown={(event) => {handleKeydown(event, x, y)}}
                 tabIndex={0}
-                
             >
                 <Image src={"/img/Boat_vertical_test.png"} alt={""} width={160} height={160}/>
             </span>
@@ -59,9 +69,19 @@ function Player({id}: {id: string}) {
     );
 }
 
+function Background() {
+    return (
+        <>
+            <Image className="absolute w-screen h-screen" src={"/img/BgCore.png"} alt={""} layout='fill'/>
+        </>
+    );
+}
+
 export default function Home() {
   return (
-    <main className="w-screen h-screen overflow-hidden" style={{backgroundImage : "url(/img/BgCore.png)"}}>
+    <main>
+        <Background />
+
         <Player
             id={"player-0"}
         />
