@@ -61,10 +61,11 @@ function Player({id}: {id: string}) {
 
 export default function Home() {
   return (
-    <main>
+    <main className="w-screen h-screen overflow-hidden" style={{backgroundImage : "url(/img/BgCore.png)"}}>
         <Player
             id={"player-0"}
         />
+        
         {/* <Player
             id={"player-1"}
         /> */}
