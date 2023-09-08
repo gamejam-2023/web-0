@@ -61,7 +61,7 @@ function Player({id}: {id: string}) {
 
 export default function Home() {
   return (
-    <main className="w-screen h-screen overflow-hidden">
+    <main>
         <Player
             id={"player-0"}
         />
