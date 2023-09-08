@@ -1,13 +1,24 @@
+'use client'
+
 import React from "react";
 
 export default function Projectile() {
+    const elem = React.useRef(null);
     const [x, set_x] = React.useState(0);
     const [y, set_y] = React.useState(0);
-
     const client_width = window.innerWidth
     const client_height = window.innerHeight
 
     React.useEffect(() => {
+        if  (x > client_width || x < 0) { 
+            //@ts-ignore
+            elem.current?.remove();
+        }
+        if  (y > client_height || y < 0) {
+            //@ts-ignore
+            elem.current?.remove();
+        }
+
         const interval = setInterval(() => {
             set_x(x + 5);
         }, 10);
@@ -25,6 +36,8 @@ export default function Projectile() {
 
 
         <div 
+        // ref={elem.current}
+        ref = {elem}
         className="absolute"
         style={{
             transform: `translate3d(${x}px, ${y}px, 0px)`,
