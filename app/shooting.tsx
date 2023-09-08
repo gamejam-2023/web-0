@@ -1,6 +1,7 @@
 'use client'
 
 import React from "react";
+import Image from "next/image";
 
 export default function Projectile({startX, startY}: {startX: number, startY: number}) {
     const elem = React.useRef(null);
@@ -47,9 +48,7 @@ export default function Projectile({startX, startY}: {startX: number, startY: nu
             willChange: `transform`,
             // transition: `transform 100ms ease`
         }}>
-            x
-            {client_width}
-            {client_height}
+            <Image src="/img/CannonBall.png" alt={""} width={50} height={50} />
         </div>
     )
   }

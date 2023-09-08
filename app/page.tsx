@@ -5,10 +5,18 @@ import Image from "next/image";
 import Projectile from "./shooting";
 import {Input} from "../lib/Input.js";
 
+
 function Player({id}: {id: string}) {
-    const elem = React.useRef<HTMLElement>(null);
+    interface ProjectileData {
+        startX: number;
+        startY: number;
+    }
+    const elem = React.useRef<HTMLSpanElement>(null);
     const [x, set_x] = React.useState(0);
     const [y, set_y] = React.useState(0);
+    const [projectiles, setProjectiles] = React.useState<ProjectileData[]>([]);  // <-- Explicitly type the state
+
+
 
     // React.useEffect(() => {
     //     var elem_input = Input(elem);
@@ -47,6 +55,9 @@ function Player({id}: {id: string}) {
         if (event.code === "KeyA") {
             set_x(x - 5);
         }
+        if (event.code === "Space") {
+            setProjectiles(prev => [...prev, { startX: x+100, startY: y+100 }]);
+        }
     }, []);
 
     return (
@@ -64,6 +75,9 @@ function Player({id}: {id: string}) {
             >
                 <Image src={"/img/Boat_vertical_test.png"} alt={""} width={160} height={160}/>
             </span>
+            {projectiles?.map((proj, index) => (
+                <Projectile key={index} startX={proj.startX} startY={proj.startY} />
+            ))}
         </>
     );
 }
@@ -88,7 +102,7 @@ export default function Home() {
         {/* <Player
             id={"player-1"}
         /> */}
-        <Projectile startX={150} startY={150} />
+        
     </main>
   )
 }
