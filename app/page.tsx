@@ -1,6 +1,7 @@
 'use client'
 
 import React from "react";
+import Projectile from "./shooting";
 
 function Player({id}: {id: string}) {
     const [x, set_x] = React.useState(0);
@@ -35,6 +36,7 @@ function Player({id}: {id: string}) {
         if (event.code === "KeyA") {
             set_x(x - 5);
         }
+        
     }, []);
 
     return (
@@ -64,6 +66,7 @@ export default function Home() {
         {/* <Player
             id={"player-1"}
         /> */}
+        <Projectile />
     </main>
   )
 }
