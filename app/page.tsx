@@ -2,6 +2,7 @@
 
 import React, { ReactHTMLElement } from "react";
 import Image from "next/image";
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link';
 
 interface MenuItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -25,14 +26,25 @@ function Menu() {
     return (
         <div className="flex flex-col gap-4 justify-center items-center w-full h-full">
             <MenuItem url={"/game"} text={"Play"} className={"bg-neutral-700 hover:bg-emerald-500"} />
-            <MenuItem url={"/game-online"} text={"Play Online"} className={"bg-neutral-700 hover:bg-emerald-500"} />
-            <MenuItem url={"/leaderboard"} text={"Leaderborad"} className={"bg-neutral-700 hover:bg-emerald-500"} />
+            {/* <MenuItem url={"/game-online"} text={"Play Online"} className={"bg-neutral-700 hover:bg-emerald-500"} /> */}
+            {/* <MenuItem url={"/leaderboard"} text={"Leaderborad"} className={"bg-neutral-700 hover:bg-emerald-500"} /> */}
             <MenuItem url={"/credits"} text={"Credits"} className={"bg-neutral-700 hover:bg-emerald-500"} />
         </div>
     );
 }
 
 export default function Home() {
+    const searchParams = useSearchParams()
+
+    React.useEffect(() => {
+        const urlParams = new URLSearchParams(searchParams.toString());
+        const refresh = Boolean(urlParams.get('refresh'));
+
+        if (refresh) {
+            window.location.href = '/';
+        }
+    }, [searchParams])
+
     return (
         <main className="w-full h-full">
             <Menu />

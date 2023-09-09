@@ -1,13 +1,18 @@
 'use client'
 
-import React, { ReactHTMLElement } from "react";
+import React from "react";
 import Image from "next/image";
 import Projectile from "./shooting";
 import { GlobalStateContext } from "../layout";
-import { cwd } from "process";
-// import {Input} from "../lib/Input.js";
+import { useRouter } from "next/navigation";
 
-function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypressed: any}) {
+interface PlayerProps {
+    id: string;
+    IsLeft: boolean;
+    keypressed: any;
+}
+
+function Player(props: PlayerProps) {
     interface ProjectileData {
         startX: number;
         startY: number;
@@ -19,7 +24,7 @@ function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypress
     const [velocity, setVelocity] = React.useState({ x: 0, y: 0 });
     let [lock , setLock] = React.useState(false);
 
-    const boat_current = IsLeft === true ? "/img/BoatBlue.png" : "/img/BoatRed.png";
+    const boat_current = props.IsLeft === true ? "/img/BoatBlue.png" : "/img/BoatRed.png";
     const [CannonBallAmo, setCannonBallAmo] = React.useState(5);
     const MAX_CANNONBALL_AMO = 5;
 
@@ -44,7 +49,7 @@ function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypress
         overflow: 'hidden'
     };
     
-    const health = IsLeft === true ? globalState[4] : globalState[5];
+    const health = props.IsLeft === true ? globalState[4] : globalState[5];
     
     const healthBarStyle = {
         height: '100%',
@@ -58,7 +63,7 @@ function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypress
 
     if (x === 0 && y === 0)
     {
-        if (IsLeft === true) {
+        if (props.IsLeft === true) {
             set_x(20);
             set_y(20);
 
@@ -93,58 +98,58 @@ function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypress
     //     });
     // }, [y]);
     
-    // console.log(keypressed);
+    // console.log(props.keypressed);
     React.useEffect(() => {
-        if (keypressed.ArrowDown && IsLeft === false) {
+        if (props.keypressed.ArrowDown && props.IsLeft === false) {
             setVelocity(prev => ({
                 x: prev.x,
                 y: prev.y + MOVE_AMOUNT
             }));
         }
-        if (keypressed.ArrowUp && IsLeft === false) {
+        if (props.keypressed.ArrowUp && props.IsLeft === false) {
             setVelocity(prev => ({
                 x: prev.x,
                 y: prev.y - MOVE_AMOUNT
             }));
         }
-        if (keypressed.ArrowLeft && IsLeft === false) {
+        if (props.keypressed.ArrowLeft && props.IsLeft === false) {
             setVelocity(prev => ({
                 x: prev.x - MOVE_AMOUNT,
                 y: prev.y
             }));
         }
-        if (keypressed.ArrowRight && IsLeft === false) {
+        if (props.keypressed.ArrowRight && props.IsLeft === false) {
             setVelocity(prev => ({
                 x: prev.x + MOVE_AMOUNT,
                 y: prev.y
             }));
         }
-        if (keypressed.KeyS && IsLeft === true) {
+        if (props.keypressed.KeyS && props.IsLeft === true) {
             setVelocity(prev => ({
                 x: prev.x,
                 y: prev.y + MOVE_AMOUNT
             }));
         }
-        if (keypressed.KeyW && IsLeft === true) {
+        if (props.keypressed.KeyW && props.IsLeft === true) {
             setVelocity(prev => ({
                 x: prev.x,
                 y: prev.y - MOVE_AMOUNT
             }));
         }
-        if (keypressed.KeyA && IsLeft === true) {
+        if (props.keypressed.KeyA && props.IsLeft === true) {
             setVelocity(prev => ({
                 x: prev.x - MOVE_AMOUNT,
                 y: prev.y
             }));
         }
-        if (keypressed.KeyD && IsLeft === true) {
+        if (props.keypressed.KeyD && props.IsLeft === true) {
             setVelocity(prev => ({
                 x: prev.x + MOVE_AMOUNT,
                 y: prev.y
             }));
         }
 
-        if (keypressed.Space && IsLeft === true) {
+        if (props.keypressed.Space && props.IsLeft === true) {
             if (CannonBallAmo <= 0) {
                 return;
             }
@@ -154,7 +159,7 @@ function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypress
             ReloadConnonBalls();
 
         }
-        if (keypressed.Enter && IsLeft === false) {
+        if (props.keypressed.Enter && props.IsLeft === false) {
             if (CannonBallAmo <= 0) {
                 return;
             }
@@ -164,7 +169,7 @@ function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypress
             ReloadConnonBalls();
         }
             
-    }, [keypressed]);
+    }, [props.keypressed]);
 
     
     function ReloadConnonBalls() {
@@ -186,19 +191,19 @@ function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypress
             // console.log(globalState[4][0]);
             velocity.x = velocity.x * -1;
         }
-        if (prevX > 40 && IsLeft === true)
+        if (prevX > 40 && props.IsLeft === true)
         {
             health[1](health[0] - 5);
             velocity.x = velocity.x * -1;
         }
-        if (prevX < 52 && IsLeft === false)
+        if (prevX < 52 && props.IsLeft === false)
         {
             health[1](health[0] - 5);
             velocity.x = velocity.x * -1;
         }
 
         // console.log(prevX);
-        if (IsLeft === true) {
+        if (props.IsLeft === true) {
             globalState[0][1](prevX + velocity.x)
         }
         else {
@@ -216,11 +221,10 @@ function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypress
         }
         if (prevY > 75)
         {
-            //lose gamea
-            velocity.y = velocity.y * -1;
+            useRouter().push(`/game/over?url=/?refresh=true&loser=${props.id}`);
         }
 
-        // if (IsLeft === true) {
+        // if (props.IsLeft === true) {
         //     player_0.y = prevY;
         // }
         // else {
@@ -228,7 +232,7 @@ function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypress
         // }
         velocity.y = velocity.y + PullForce;
 
-        if (IsLeft === true) {
+        if (props.IsLeft === true) {
             globalState[1][1](prevY + velocity.x)
         }
         else {
@@ -240,7 +244,7 @@ function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypress
 
     function getHealthColor(health: number): string {
         if (health <= 0) {
-            console.log("Game Over");
+            useRouter().push(`/game/over?url=/?refresh=true&loser=${props.id}`);
         }
 
         if (health > 60) {
@@ -319,7 +323,7 @@ function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypress
             {/* </div> */}
             </span>
             {projectiles?.map((proj, index) => (
-                <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={IsLeft} />
+                <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={props.IsLeft} />
             ))}
         </>
     );
@@ -344,11 +348,11 @@ function Background() {
 export function PlayerController() {
     const [keysPressed, setKeysPressed] = React.useState({});
 
-    const handleKeyDown = React.useCallback(event => {
+    const handleKeyDown = React.useCallback((event: KeyboardEvent) => {
         setKeysPressed(prev => ({ ...prev, [event.code]: true }));
     }, []);
 
-    const handleKeyUp = React.useCallback(event => {
+    const handleKeyUp = React.useCallback((event: KeyboardEvent) => {
         setKeysPressed(prev => ({ ...prev, [event.code]: false }));
     }, []);
 
@@ -370,7 +374,7 @@ export function PlayerController() {
             />
             <Player
                 id={"player-1"}
-                IsLeft={false}w
+                IsLeft={false}
                 keypressed={(keysPressed)}
             />
         </>
