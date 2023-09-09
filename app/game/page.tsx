@@ -3,7 +3,7 @@
 import React, { ReactHTMLElement } from "react";
 import Image from "next/image";
 import Projectile from "./shooting";
-import {Input} from "@/lib/Input.js";
+import {Input} from "../lib/Input.js";
 
 function Player({id}: {id: string}) {
     interface ProjectileData {
@@ -78,7 +78,12 @@ function Player({id}: {id: string}) {
         // if (Math.abs(velocity.y) < VelocityTreshold) velocity.y = 0;
         // else (velocity.y = velocity.y * FRICTION)
         const interval = setInterval(() => {
-            
+            if (x < client_width+100 || x > 100) { 
+                velocity.x = velocity.x * -1;
+            }
+            if (y < client_height || y > 0) {
+                velocity.y = velocity.y * -1;
+            }
             // velocity.y = velocity.y + PullForce;
             set_x(prevX => prevX + velocity.x);
             set_y(prevY => prevY + velocity.y);
@@ -142,7 +147,6 @@ function Background() {
         </>
     );
 }
-
 export default function Home() {
     return (
         <main>
