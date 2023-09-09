@@ -20,7 +20,6 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
         startX: number;
         startY: number;
     }
-
     
 
     const elem = React.useRef<HTMLSpanElement>(null);
@@ -33,7 +32,7 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
     // const FRICTION = 0.97;   
     const MaxSpeed = 10;
     // const VelocityTreshold = 0.1;
-    const PullForce = 0.05;
+    const PullForce = 0.005;
 
     let keyToDirectionMap: Record<string, { x: number, y: number }>
     
@@ -108,20 +107,20 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
         client_width = window.innerWidth;
         client_height = window.innerHeight;
         client_width_half = client_width / 2;
-        if (prevX < -1)
+        if (prevX < -3 || prevX > 94)
         {
             velocity.x = velocity.x * -1;
         }
-        if (prevX > 40 && IsLeft === true)
+        if (prevX > 45 && IsLeft === true)
         {
             velocity.x = velocity.x * -1;
         }
-        if (prevX < 60 && IsLeft === false)
+        if (prevX < 55 && IsLeft === false)
         {
             velocity.x = velocity.x * -1;
         }
 
-        console.log(prevX);
+        // console.log(prevX);
         if (IsLeft === true) {
             player_0.x = prevX;
         }
@@ -149,6 +148,7 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
         else {
             player_1.y = prevY;
         }
+        velocity.y = velocity.y + PullForce;
 
         return prevY + velocity.y;
     }
