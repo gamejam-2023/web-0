@@ -18,9 +18,10 @@ function Player({id}: {id: string}) {
     const [velocity, setVelocity] = React.useState({ x: 0, y: 0 });
 
     const MOVE_AMOUNT = 2;
-    const FRICTION = 0.97;   
+    // const FRICTION = 0.97;   
     const MaxSpeed = 10;
-    const VelocityTreshold = 0.1;
+    // const VelocityTreshold = 0.1;
+    const PullForce = 0.05;
 
     const keyToDirectionMap: Record<string, { x: number, y: number }> = {
         KeyW: { x: 0, y: -MOVE_AMOUNT },
@@ -28,6 +29,9 @@ function Player({id}: {id: string}) {
         KeyA: { x: -MOVE_AMOUNT, y: 0 },
         KeyD: { x: MOVE_AMOUNT, y: 0 },
     };
+
+    const client_width = window.innerWidth
+    const client_height = window.innerHeight
 
     // React.useEffect(() => {
     //     var elem_input = Input(elem);
@@ -63,36 +67,43 @@ function Player({id}: {id: string}) {
             }));
         }
         if (event.code === "Space") {
-            setProjectiles(prev => [...prev, { startX: x+100, startY: y+100 }]);
+            setProjectiles(prev => [...prev, { startX: x, startY: y }]);
         }
     }, []);
 
     React.useEffect(() => {
-        let running = true;
           
-        const loop = () => {
-            // if (!running) return;
-
+        // if (Math.abs(velocity.x) < VelocityTreshold) velocity.x = 0;
+        // else (velocity.x = velocity.x * FRICTION)
+        // if (Math.abs(velocity.y) < VelocityTreshold) velocity.y = 0;
+        // else (velocity.y = velocity.y * FRICTION)
+        const interval = setInterval(() => {
             
-            // Apply friction
-            if (Math.abs(velocity.x) < VelocityTreshold) velocity.x = 0;
-            else (velocity.x = velocity.x * FRICTION)
-            if (Math.abs(velocity.y) < VelocityTreshold) velocity.y = 0;
-            else (velocity.y = velocity.y * FRICTION)
-
-            // setVelocity(prev => ({
-            //     x: prev.x * FRICTION,
-            //     y: prev.y * FRICTION
-            // }));
-
+            // velocity.y = velocity.y + PullForce;
             set_x(prevX => prevX + velocity.x);
             set_y(prevY => prevY + velocity.y);
+        }, 30);
+
+        // const loop = () => {
+        //     // if (!running) return;
+
             
-            requestAnimationFrame(loop);
-        };
+        //     // Apply friction
+            
+
+        //     // setVelocity(prev => ({
+        //     //     x: prev.x * FRICTION,
+        //     //     y: prev.y * FRICTION
+        //     // }));
+
+        //     set_x(prevX => prevX + velocity.x);
+        //     set_y(prevY => prevY + velocity.y);
+            
+        //     requestAnimationFrame(loop);
+        // };
         
-        loop();  // Start the loop
-        return () => { running = false }; 
+        // loop();  // Start the loop
+        return () => clearInterval(interval);
     }, [velocity]);
 
     return (
