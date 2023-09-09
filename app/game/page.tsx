@@ -7,7 +7,7 @@ import { GlobalStateContext } from "../layout";
 import { cwd } from "process";
 // import {Input} from "../lib/Input.js";
 
-function Player({id, IsLeft, key_code}: {id: string, IsLeft: boolean, key_code: string}) {
+function Player({id, IsLeft, keypressed}: {id: string, IsLeft: boolean, keypressed: any}) {
     interface ProjectileData {
         startX: number;
         startY: number;
@@ -17,8 +17,11 @@ function Player({id, IsLeft, key_code}: {id: string, IsLeft: boolean, key_code: 
     const [y, set_y] = React.useState(0);
     const [projectiles, setProjectiles] = React.useState<ProjectileData[]>([]);  // <-- Explicitly type the state
     const [velocity, setVelocity] = React.useState({ x: 0, y: 0 });
+    let [lock , setLock] = React.useState(false);
 
     const boat_current = IsLeft === true ? "/img/BoatBlue.png" : "/img/BoatRed.png";
+    const [CannonBallAmo, setCannonBallAmo] = React.useState(5);
+    const MAX_CANNONBALL_AMO = 5;
 
     
     const globalState = React.useContext(GlobalStateContext);
@@ -42,7 +45,6 @@ function Player({id, IsLeft, key_code}: {id: string, IsLeft: boolean, key_code: 
     };
     
     const health = IsLeft === true ? globalState[4] : globalState[5];
-    const health_other = IsLeft === true ? globalState[5] : globalState[4];
     
     const healthBarStyle = {
         height: '100%',
@@ -52,28 +54,7 @@ function Player({id, IsLeft, key_code}: {id: string, IsLeft: boolean, key_code: 
     };
 
     const MOVE_AMOUNT = 0.1;
-    // const FRICTION = 0.97;   
-    const MaxSpeed = 10;
-    // const VelocityTreshold = 0.1;
     const PullForce = 0.005;
-
-    const keyToDirectionMap: Record<string, { x: number, y: number }> = IsLeft === true ? 
-        {
-            KeyW: { x: 0, y: -MOVE_AMOUNT },
-            KeyS: { x: 0, y: MOVE_AMOUNT },
-            KeyA: { x: -MOVE_AMOUNT, y: 0 },
-            KeyD: { x: MOVE_AMOUNT, y: 0 },
-        }
-        : 
-        {
-            ArrowUp: { x: 0, y: -MOVE_AMOUNT },
-            ArrowDown: { x: 0, y: MOVE_AMOUNT },
-
-            ArrowLeft: { x: -MOVE_AMOUNT, y: 0 },
-            ArrowRight: { x: MOVE_AMOUNT, y: 0 },
-        };
-
-    
 
     if (x === 0 && y === 0)
     {
@@ -112,37 +93,91 @@ function Player({id, IsLeft, key_code}: {id: string, IsLeft: boolean, key_code: 
     //     });
     // }, [y]);
     
-
+    // console.log(keypressed);
     React.useEffect(() => {
-        const direction = keyToDirectionMap[key_code];
-        if (direction) {
+        if (keypressed.ArrowDown && IsLeft === false) {
             setVelocity(prev => ({
-                x: Math.min(MaxSpeed, Math.max(-MaxSpeed, prev.x + direction.x)),
-                y: Math.min(MaxSpeed, Math.max(-MaxSpeed, prev.y + direction.y))
+                x: prev.x,
+                y: prev.y + MOVE_AMOUNT
             }));
         }
-        if (key_code === "Space") {
-            setProjectiles(prev => [...prev, { startX: x, startY: y }]);
+        if (keypressed.ArrowUp && IsLeft === false) {
+            setVelocity(prev => ({
+                x: prev.x,
+                y: prev.y - MOVE_AMOUNT
+            }));
         }
-    }, [key_code]);
+        if (keypressed.ArrowLeft && IsLeft === false) {
+            setVelocity(prev => ({
+                x: prev.x - MOVE_AMOUNT,
+                y: prev.y
+            }));
+        }
+        if (keypressed.ArrowRight && IsLeft === false) {
+            setVelocity(prev => ({
+                x: prev.x + MOVE_AMOUNT,
+                y: prev.y
+            }));
+        }
+        if (keypressed.KeyS && IsLeft === true) {
+            setVelocity(prev => ({
+                x: prev.x,
+                y: prev.y + MOVE_AMOUNT
+            }));
+        }
+        if (keypressed.KeyW && IsLeft === true) {
+            setVelocity(prev => ({
+                x: prev.x,
+                y: prev.y - MOVE_AMOUNT
+            }));
+        }
+        if (keypressed.KeyA && IsLeft === true) {
+            setVelocity(prev => ({
+                x: prev.x - MOVE_AMOUNT,
+                y: prev.y
+            }));
+        }
+        if (keypressed.KeyD && IsLeft === true) {
+            setVelocity(prev => ({
+                x: prev.x + MOVE_AMOUNT,
+                y: prev.y
+            }));
+        }
 
-    const handleKeydown = React.useCallback((event: React.KeyboardEvent<HTMLSpanElement>, x: number, y: number) => {
-        const direction = keyToDirectionMap[event.code];
-        if (direction) {
-            setVelocity(prev => ({
-                x: Math.min(MaxSpeed, Math.max(-MaxSpeed, prev.x + direction.x)),
-                y: Math.min(MaxSpeed, Math.max(-MaxSpeed, prev.y + direction.y))
-            }));
-        }
-        if (event.code === "Space") {
+        if (keypressed.Space && IsLeft === true) {
+            if (CannonBallAmo <= 0) {
+                return;
+            }
             setProjectiles(prev => [...prev, { startX: x, startY: y }]);
+            setCannonBallAmo(CannonBallAmo - 1);
+  
+            ReloadConnonBalls();
+
         }
-        // if (event.code === "KeyH") {
-        //     // globalState[4][1]();
-        //     console.log(globalState[4][0])// set player0Health to 100
-        //     // setHealth(health => health - 5);
-        // }
-    }, []);
+        if (keypressed.Enter && IsLeft === false) {
+            if (CannonBallAmo <= 0) {
+                return;
+            }
+            setProjectiles(prev => [...prev, { startX: x, startY: y }]);
+            setCannonBallAmo(CannonBallAmo - 1);
+
+            ReloadConnonBalls();
+        }
+            
+    }, [keypressed]);
+
+    
+    function ReloadConnonBalls() {
+        if (lock) {
+            return;
+        }
+        lock = true;
+        setLock(true);
+        new Promise(resolve => setTimeout(resolve, 3000)).then(() => {
+            setCannonBallAmo(MAX_CANNONBALL_AMO);
+            setLock(false);
+        });
+    }
 
     function UpdateX(prevX: number): number {
         if (prevX < -3 || prevX > 94)
@@ -172,8 +207,6 @@ function Player({id, IsLeft, key_code}: {id: string, IsLeft: boolean, key_code: 
 
         return prevX + velocity.x;
     }
-    // console.log(globalState[4][0]);
-
 
     function UpdateY(prevY: number): number {
         if (prevY < -1)
@@ -220,10 +253,15 @@ function Player({id, IsLeft, key_code}: {id: string, IsLeft: boolean, key_code: 
       }
 
     React.useEffect(() => {
-
         const interval = setInterval(() => {
             set_x(prevX => UpdateX(prevX));
             set_y(prevY => UpdateY(prevY));
+            
+            // clearInterval(interval);
+            // //@ts-ignore
+            // elem.current?.remove();
+            // return false
+            
         }, 30);
 
         
@@ -232,6 +270,13 @@ function Player({id, IsLeft, key_code}: {id: string, IsLeft: boolean, key_code: 
 
     return (
         <>
+            <span className="absolute" style={{
+                // right: '50',
+                left: `${x}%`,
+                top: `${y}%`,
+                 color: 'white'
+                 }}>{CannonBallAmo}</span>
+            
             <span
                 id = {"player"}
                 ref={elem}
@@ -287,42 +332,46 @@ function Background() {
         <>
             <div className="relative w-screen h-screen overflow-hidden"> {/* Container for the waves */}
                 <Image className="absolute w-screen h-screen" src={"/img/BgOnlt.png"} alt={""} layout='fill'/>
-                <Image className="absolute w-screen h-screen" src={"/img/WaterMovingMiddle1.png"} alt={""} layout='fill'/>
-                <Image className="absolute w-screen h-screen WaterMovingMiddle" src={"/img/WaterMovingMiddle2.png"} alt={""} layout='fill'/>
-
-
                 <Image className="absolute w-screen h-screen wavesAnimation" src={"/img/waves2.png"} alt={"Waves"} layout='fill'/>
                 <Image className="absolute w-screen h-screen wavesAnimation" style={{top: '-100%'}} src={"/img/waves2.png"} alt={"Waves"} layout='fill'/>
+                <Image className="absolute w-screen h-screen" src={"/img/WaterMovingMiddle1.png"} alt={""} layout='fill'/>
+                <Image className="absolute w-screen h-screen WaterMovingMiddle" src={"/img/WaterMovingMiddle2.png"} alt={""} layout='fill'/>
             </div>
         </>
     );
 }
 
 export function PlayerController() {
-    const [key_code, set_key_code] = React.useState("");
+    const [keysPressed, setKeysPressed] = React.useState({});
 
-    const handleUserKeyPress = React.useCallback(event => {
-        set_key_code(event.code);
+    const handleKeyDown = React.useCallback(event => {
+        setKeysPressed(prev => ({ ...prev, [event.code]: true }));
+    }, []);
+
+    const handleKeyUp = React.useCallback(event => {
+        setKeysPressed(prev => ({ ...prev, [event.code]: false }));
     }, []);
 
     React.useEffect(() => {
-        window.addEventListener("keydown", handleUserKeyPress);
+        window.addEventListener("keydown", handleKeyDown);
+        window.addEventListener("keyup", handleKeyUp);
         return () => {
-            window.removeEventListener("keydown", handleUserKeyPress);
+            window.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("keyup", handleKeyUp);
         };
-    }, [handleUserKeyPress]);
+    }, [handleKeyDown, handleKeyUp]);
 
     return (
         <>
             <Player
                 id={"player-0"}
                 IsLeft={true}
-                key_code={key_code}
+                keypressed={(keysPressed)}
             />
             <Player
                 id={"player-1"}
-                IsLeft={false}
-                key_code={key_code}
+                IsLeft={false}w
+                keypressed={(keysPressed)}
             />
         </>
     );

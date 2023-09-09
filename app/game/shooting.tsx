@@ -4,7 +4,8 @@ import React from "react";
 import Image from "next/image";
 import { GlobalStateContext } from "../layout";
 
-export default function Projectile({startX, startY, IsLeft}: {startX: number, startY: number, IsLeft: boolean}) {
+export default function Projectile({startX, startY, IsLeft,
+}: {startX: number, startY: number, IsLeft: boolean}) {
     const elem = React.useRef(null);
     const [x, set_x] = React.useState(0);
     const [y, set_y] = React.useState(0);
@@ -78,16 +79,17 @@ export default function Projectile({startX, startY, IsLeft}: {startX: number, st
         //             willChange: `transform, top, left`,
         //         }}
         className="absolute"
+        
         style={{
-            width: "8%",
-            height: "25%",
+            width: "2%",
+            height: "2%",
             left: `${x}%`,
             top: `${y}%`,
             // transform: `translate3d(${x}px, ${y}px, 0px)`,
-            willChange: `left, top`,
+            willChange: `left, right`
             // transition: `transform 300ms ease`
         }}>
-            <Image src="/img/CannonBall.png" alt={""} width={50} height={50} />
+            <Image src="/img/CannonBall.png" alt={""} fill={true} />
         </div>
     )
   }
