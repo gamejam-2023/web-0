@@ -120,11 +120,11 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
         {
             velocity.x = velocity.x * -1;
         }
-        if (prevX > 45 && IsLeft === true)
+        if (prevX > 40 && IsLeft === true)
         {
             velocity.x = velocity.x * -1;
         }
-        if (prevX < 55 && IsLeft === false)
+        if (prevX < 52 && IsLeft === false)
         {
             velocity.x = velocity.x * -1;
         }
@@ -191,10 +191,16 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
             >
                 <Image
                     className="absolute"
-                    src={"/img/Boat_vertical_test.png"}
+                    src={"/img/BoatWaterMove3.png"}
                     alt={""}
                     layout="fill"
                 />
+                {/* <Image
+                    className="absolute"
+                    src={"/img/Boat_vertical_test.png"}
+                    alt={""}
+                    layout="fill"
+                /> */}
             </span>
             {projectiles?.map((proj, index) => (
                 <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={IsLeft} />
@@ -208,9 +214,12 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
 function Background() {
     return (
         <>
-            <Image className="absolute w-screen h-screen" src={"/img/BgCore2.png"} alt={""} layout='fill'/>
-            {/* loop a image */}
-            <Image className="absolute w-screen h-screen wavesAnimation" src={"/img/waves1.png"} alt={""} layout='fill'/>
+            
+            <div className="relative w-screen h-screen overflow-hidden"> {/* Container for the waves */}
+                <Image className="absolute w-screen h-screen" src={"/img/BgCore2.png"} alt={""} layout='fill'/>
+                <Image className="absolute w-screen h-screen wavesAnimation" src={"/img/waves1.png"} alt={"Waves"} layout='fill'/>
+                <Image className="absolute w-screen h-screen wavesAnimation" style={{top: '-100%'}} src={"/img/waves1.png"} alt={"Waves"} layout='fill'/>
+            </div>
         </>
     );
 }
