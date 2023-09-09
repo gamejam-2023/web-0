@@ -215,7 +215,7 @@ function Background() {
 
 export default function Home() {
     return (
-        <main>
+        <main className="w-full h-full">
             <Background />
 
             <Player
