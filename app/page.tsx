@@ -45,6 +45,19 @@ export default function Home() {
         }
     }, [searchParams])
 
+    const handleKeyDown = React.useCallback((event: KeyboardEvent) => {
+        if (["Space", "Enter", "Escape"].includes(event.code)) {
+            window.location.href = '/game';
+        }
+    }, []);
+
+    React.useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown);
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [handleKeyDown]);
+
     return (
         <main className="w-full h-full">
             <Menu />
