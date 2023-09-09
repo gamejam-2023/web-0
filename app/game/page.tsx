@@ -5,11 +5,23 @@ import Image from "next/image";
 import Projectile from "./shooting";
 // import {Input} from "../lib/Input.js";
 
-function Player({id}: {id: string}) {
+//keep track of players position
+const player_0 = {
+    x: 0,
+    y: 0,
+}
+const player_1 = {
+    x: 0,
+    y: 0,
+}
+
+function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
     interface ProjectileData {
         startX: number;
         startY: number;
     }
+
+    
 
     const elem = React.useRef<HTMLSpanElement>(null);
     const [x, set_x] = React.useState(0);
@@ -23,12 +35,32 @@ function Player({id}: {id: string}) {
     // const VelocityTreshold = 0.1;
     const PullForce = 0.05;
 
-    const keyToDirectionMap: Record<string, { x: number, y: number }> = {
-        KeyW: { x: 0, y: -MOVE_AMOUNT },
-        KeyS: { x: 0, y: MOVE_AMOUNT },
-        KeyA: { x: -MOVE_AMOUNT, y: 0 },
-        KeyD: { x: MOVE_AMOUNT, y: 0 },
-    };
+    let keyToDirectionMap: Record<string, { x: number, y: number }>
+    
+
+    if (x === 0 && y === 0)
+    {
+        if (IsLeft === true) {
+            set_x(20);
+            set_y(20);
+            keyToDirectionMap = {
+                KeyW: { x: 0, y: -MOVE_AMOUNT },
+                KeyS: { x: 0, y: MOVE_AMOUNT },
+                KeyA: { x: -MOVE_AMOUNT, y: 0 },
+                KeyD: { x: MOVE_AMOUNT, y: 0 },
+            };
+        }
+        else {
+            set_x(80);
+            set_y(20);
+            keyToDirectionMap = {
+                ArrowUp: { x: 0, y: -MOVE_AMOUNT },
+                ArrowDown: { x: 0, y: MOVE_AMOUNT },
+                ArrowLeft: { x: -MOVE_AMOUNT, y: 0 },
+                ArrowRight: { x: MOVE_AMOUNT, y: 0 },
+            };
+        }
+    }
 
     let client_width = window.innerWidth
     let client_height = window.innerHeight
@@ -80,11 +112,23 @@ function Player({id}: {id: string}) {
         {
             velocity.x = velocity.x * -1;
         }
-        if (prevX > 40)
+        if (prevX > 40 && IsLeft === true)
         {
             velocity.x = velocity.x * -1;
         }
+        if (prevX < 60 && IsLeft === false)
+        {
+            velocity.x = velocity.x * -1;
+        }
+
         console.log(prevX);
+        if (IsLeft === true) {
+            player_0.x = prevX;
+        }
+        else {
+            player_1.x = prevX;
+        }
+
         return prevX + velocity.x;
     }
 
@@ -98,6 +142,14 @@ function Player({id}: {id: string}) {
             //lose game
             velocity.y = velocity.y * -1;
         }
+
+        if (IsLeft === true) {
+            player_0.y = prevY;
+        }
+        else {
+            player_1.y = prevY;
+        }
+
         return prevY + velocity.y;
     }
 
@@ -136,7 +188,7 @@ function Player({id}: {id: string}) {
                 />
             </span>
             {projectiles?.map((proj, index) => (
-                <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={true} />
+                <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={IsLeft} />
             ))}dd
         </>
     );
@@ -158,11 +210,13 @@ export default function Home() {
 
             <Player
                 id={"player-0"}
+                IsLeft={true}
             />
             
-            {/* <Player
+            <Player
                 id={"player-1"}
-            /> */}
+                IsLeft={false}
+            />
             
         </main>
     )

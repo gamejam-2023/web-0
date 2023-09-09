@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { request } from "http";
 
 export default function Projectile({startX, startY, IsLeft}: {startX: number, startY: number, IsLeft: boolean}) {
     const elem = React.useRef(null);
@@ -21,8 +20,8 @@ export default function Projectile({startX, startY, IsLeft}: {startX: number, st
 
         }
         else {
-            set_x(startX - 5);
-            set_y(startY - 10);
+            set_x(startX);
+            set_y(startY + 10);
         }
     }
     const client_width = window.innerWidth
@@ -38,7 +37,6 @@ export default function Projectile({startX, startY, IsLeft}: {startX: number, st
             //@ts-ignore
             elem.current?.remove();
         }
-
 
         const interval = setInterval(() => {
             set_x(x + speed);
