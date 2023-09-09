@@ -5,7 +5,6 @@ import Image from "next/image";
 import Projectile from "./shooting";
 import {Input} from "../lib/Input.js";
 
-
 function Player({id}: {id: string}) {
     interface ProjectileData {
         startX: number;
@@ -16,15 +15,12 @@ function Player({id}: {id: string}) {
     const [x, set_x] = React.useState(0);
     const [y, set_y] = React.useState(0);
     const [projectiles, setProjectiles] = React.useState<ProjectileData[]>([]);  // <-- Explicitly type the state
-    const [keysPressed, setKeysPressed] = React.useState({ KeyW: false, KeyS: false, KeyA: false, KeyD: false });
     const [velocity, setVelocity] = React.useState({ x: 0, y: 0 });
 
     const MOVE_AMOUNT = 2;
     const FRICTION = 0.97;   
     const MaxSpeed = 10;
     const VelocityTreshold = 0.1;
-    
-
 
     const keyToDirectionMap: Record<string, { x: number, y: number }> = {
         KeyW: { x: 0, y: -MOVE_AMOUNT },
@@ -73,7 +69,7 @@ function Player({id}: {id: string}) {
 
     React.useEffect(() => {
         let running = true;
-        
+          
         const loop = () => {
             // if (!running) return;
 
@@ -81,8 +77,7 @@ function Player({id}: {id: string}) {
             // Apply friction
             if (Math.abs(velocity.x) < VelocityTreshold) velocity.x = 0;
             else (velocity.x = velocity.x * FRICTION)
-            if (Math.abs(velocity.y) < VelocityTreshold) 
-            {velocity.y = 0;}
+            if (Math.abs(velocity.y) < VelocityTreshold) velocity.y = 0;
             else (velocity.y = velocity.y * FRICTION)
 
             // setVelocity(prev => ({
@@ -116,8 +111,8 @@ function Player({id}: {id: string}) {
                 <Image src={"/img/Boat_vertical_test.png"} alt={""} width={160} height={160}/>
             </span>
             {projectiles?.map((proj, index) => (
-                <Projectile key={index} startX={proj.startX} startY={proj.startY} />
-            ))}
+                <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={true} />
+            ))}dd
         </>
     );
 }
