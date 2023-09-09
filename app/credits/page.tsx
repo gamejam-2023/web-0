@@ -8,12 +8,12 @@ function Credits(props: CreditsProps) {
         <>
             <div className="flex flex-col gap-4 items-center justify-center h-full">
                 <div className="flex flex-col items-center justify-center gap-2 w-48 h-24 p-2 rounded-lg bg-neutral-700 shadow-lg">
-                    <h2 className="font-semibold">Programming</h2>
-                    <h3>Aron</h3>
-                </div>
-                <div className="flex flex-col items-center justify-center gap-2 w-48 h-24 p-2 rounded-lg bg-neutral-700 shadow-lg">
                     <h2 className="font-semibold">Art</h2>
                     <h3>Rannvá</h3>
+                </div>
+                <div className="flex flex-col items-center justify-center gap-2 w-48 h-24 p-2 rounded-lg bg-neutral-700 shadow-lg">
+                    <h2 className="font-semibold">Programming</h2>
+                    <h3>Aron</h3>
                 </div>
                 <div className="flex flex-col items-center justify-center gap-2 w-48 h-24 p-2 rounded-lg bg-neutral-700 shadow-lg">
                     <h2 className="font-semibold">Sound</h2>

@@ -45,7 +45,7 @@ export default function RootLayout({
 
   return (
     <html className="w-screen h-screen overflow-hidden" lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} w-full h-full`}>
         <GlobalStateContext.Provider value={[
             [player0X, setPlayer0X],
             [player0Y, setPlayer0Y],
