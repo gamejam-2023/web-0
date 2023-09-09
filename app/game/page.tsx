@@ -209,6 +209,8 @@ function Background() {
     return (
         <>
             <Image className="absolute w-screen h-screen" src={"/img/BgCore2.png"} alt={""} layout='fill'/>
+            {/* loop a image */}
+            <Image className="absolute w-screen h-screen wavesAnimation" src={"/img/waves1.png"} alt={""} layout='fill'/>
         </>
     );
 }
