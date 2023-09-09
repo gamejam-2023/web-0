@@ -7,7 +7,7 @@ import { GlobalStateContext } from "../layout";
 import { cwd } from "process";
 // import {Input} from "../lib/Input.js";
 
-function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
+function Player({id, IsLeft, key_code}: {id: string, IsLeft: boolean, key_code: string}) {
     interface ProjectileData {
         startX: number;
         startY: number;
@@ -112,6 +112,19 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
     //     });
     // }, [y]);
     
+
+    React.useEffect(() => {
+        const direction = keyToDirectionMap[key_code];
+        if (direction) {
+            setVelocity(prev => ({
+                x: Math.min(MaxSpeed, Math.max(-MaxSpeed, prev.x + direction.x)),
+                y: Math.min(MaxSpeed, Math.max(-MaxSpeed, prev.y + direction.y))
+            }));
+        }
+        if (key_code === "Space") {
+            setProjectiles(prev => [...prev, { startX: x, startY: y }]);
+        }
+    }, [key_code]);
 
     const handleKeydown = React.useCallback((event: React.KeyboardEvent<HTMLSpanElement>, x: number, y: number) => {
         const direction = keyToDirectionMap[event.code];
@@ -230,7 +243,7 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
                     top: `${y}%`,
                     willChange: `transform, top, left`,
                 }}
-                onKeyDown={(event) => {handleKeydown(event, x, y)}}
+                // onKeyDown={(event) => {handleKeydown(event, x, y)}}
                 tabIndex={0}
             >
                 
@@ -261,7 +274,7 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
             {/* </div> */}
             </span>
             {projectiles?.map((proj, index) => (
-                <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={IsLeft} health_other={health_other} />
+                <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={IsLeft} />
             ))}
         </>
     );
@@ -285,21 +298,41 @@ function Background() {
     );
 }
 
+export function PlayerController() {
+    const [key_code, set_key_code] = React.useState("");
+
+    const handleUserKeyPress = React.useCallback(event => {
+        set_key_code(event.code);
+    }, []);
+
+    React.useEffect(() => {
+        window.addEventListener("keydown", handleUserKeyPress);
+        return () => {
+            window.removeEventListener("keydown", handleUserKeyPress);
+        };
+    }, [handleUserKeyPress]);
+
+    return (
+        <>
+            <Player
+                id={"player-0"}
+                IsLeft={true}
+                key_code={key_code}
+            />
+            <Player
+                id={"player-1"}
+                IsLeft={false}
+                key_code={key_code}
+            />
+        </>
+    );
+}
+
 export default function Home() {
     return (
         <main className="w-full h-full">
             <Background />
-
-            <Player
-                id={"player-0"}
-                IsLeft={true}
-            />
-            
-            <Player
-                id={"player-1"}
-                IsLeft={false}
-            />
-            
+            <PlayerController /> 
         </main>
     )
 }
