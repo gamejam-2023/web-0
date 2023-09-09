@@ -19,9 +19,11 @@ function Player({id}: {id: string}) {
     const [keysPressed, setKeysPressed] = React.useState({ KeyW: false, KeyS: false, KeyA: false, KeyD: false });
     const [velocity, setVelocity] = React.useState({ x: 0, y: 0 });
 
-    const MOVE_AMOUNT = 0.5;
-    const FRICTION = 0.9;
+    const MOVE_AMOUNT = 2;
+    const FRICTION = 0.97;   
     const MaxSpeed = 10;
+    const VelocityTreshold = 0.1;
+    
 
 
     const keyToDirectionMap: Record<string, { x: number, y: number }> = {
@@ -55,52 +57,48 @@ function Player({id}: {id: string}) {
     //     });
     // }, [y]);
     
-    React.useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (keyToDirectionMap[e.code]) {
-                setKeysPressed(prev => ({ ...prev, [e.code]: true }));
-            }
-        };
-    
-        const handleKeyUp = (e: KeyboardEvent) => {
-            if (keyToDirectionMap[e.code]) {
-                setKeysPressed(prev => ({ ...prev, [e.code]: false }));
-            }
-        };
-    
-        document.addEventListener('keydown', handleKeyDown);
-        document.addEventListener('keyup', handleKeyUp);
-    
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-            document.removeEventListener('keyup', handleKeyUp);
-        };
-    }, []);
-
-    React.useEffect(() => {
-        const move = () => {
-            let deltaX = 0
-            let deltaY = 0;
-    
-            if (keysPressed.KeyW) deltaY -= MOVE_AMOUNT;
-            if (keysPressed.KeyS) deltaY += MOVE_AMOUNT;
-            if (keysPressed.KeyA) deltaX -= MOVE_AMOUNT;
-            if (keysPressed.KeyD) deltaX += MOVE_AMOUNT;
-
-            if (deltaX !== 0) set_x(prev => prev + deltaX);
-            if (deltaY !== 0) set_y(prev => prev + deltaY);
-    
-            requestAnimationFrame(move);
-        };
-    
-        move();
-    }, [keysPressed]);
 
     const handleKeydown = React.useCallback((event: React.KeyboardEvent<HTMLSpanElement>, x: number, y: number) => {
+        const direction = keyToDirectionMap[event.code];
+        if (direction) {
+            setVelocity(prev => ({
+                x: Math.min(MaxSpeed, Math.max(-MaxSpeed, prev.x + direction.x)),
+                y: Math.min(MaxSpeed, Math.max(-MaxSpeed, prev.y + direction.y))
+            }));
+        }
         if (event.code === "Space") {
             setProjectiles(prev => [...prev, { startX: x+100, startY: y+100 }]);
         }
     }, []);
+
+    React.useEffect(() => {
+        let running = true;
+        
+        const loop = () => {
+            // if (!running) return;
+
+            
+            // Apply friction
+            if (Math.abs(velocity.x) < VelocityTreshold) velocity.x = 0;
+            else (velocity.x = velocity.x * FRICTION)
+            if (Math.abs(velocity.y) < VelocityTreshold) 
+            {velocity.y = 0;}
+            else (velocity.y = velocity.y * FRICTION)
+
+            // setVelocity(prev => ({
+            //     x: prev.x * FRICTION,
+            //     y: prev.y * FRICTION
+            // }));
+
+            set_x(prevX => prevX + velocity.x);
+            set_y(prevY => prevY + velocity.y);
+            
+            requestAnimationFrame(loop);
+        };
+        
+        loop();  // Start the loop
+        return () => { running = false }; 
+    }, [velocity]);
 
     return (
         <>
