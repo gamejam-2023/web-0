@@ -101,14 +101,21 @@ function Player({id}: {id: string}) {
                 ref={elem}
                 className="absolute outline-none"
                 style={{
-                    transform: `translate3d(${x}px, ${y}px, 0px)`,
-                    willChange: `transform`,
-                    transition: `transform 100ms ease`,
+                    width: "8%",
+                    height: "25%",
+                    left: `${x / 20}%`,
+                    top: `${y / 20}%`,
+                    willChange: `transform, top, left`,
                 }}
                 onKeyDown={(event) => {handleKeydown(event, x, y)}}
                 tabIndex={0}
             >
-                <Image src={"/img/Boat_vertical_test.png"} alt={""} width={160} height={160}/>
+                <Image
+                    className="absolute"
+                    src={"/img/Boat_vertical_test.png"}
+                    alt={""}
+                    layout="fill"
+                />
             </span>
             {projectiles?.map((proj, index) => (
                 <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={true} />
