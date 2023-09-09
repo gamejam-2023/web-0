@@ -3,6 +3,7 @@
 import React, { ReactHTMLElement } from "react";
 import Image from "next/image";
 import Projectile from "./shooting";
+import { GlobalStateContext } from "../layout";
 // import {Input} from "../lib/Input.js";
 
 //keep track of players position
@@ -27,6 +28,14 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
     const [y, set_y] = React.useState(0);
     const [projectiles, setProjectiles] = React.useState<ProjectileData[]>([]);  // <-- Explicitly type the state
     const [velocity, setVelocity] = React.useState({ x: 0, y: 0 });
+
+    const globalState = React.useContext(GlobalStateContext);
+    console.log(id, globalState);
+    globalState[0][1](1);// set player0X to 1
+    // globalState[1][1](2);// set player0Y to 2
+    // globalState[2][1](3);// set player1X to 3
+    // globalState[3][1](4);// set player1Y to 4
+    // console.log(globalState[3][0]);// get player1Y
 
     const MOVE_AMOUNT = 0.1;
     // const FRICTION = 0.97;   
@@ -203,6 +212,7 @@ function Background() {
         </>
     );
 }
+
 export default function Home() {
     return (
         <main>
