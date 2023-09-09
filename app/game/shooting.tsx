@@ -53,7 +53,8 @@ export default function Projectile({startX, startY, IsLeft}: {startX: number, st
         // console.log("prevX: " + prevX);
         const Player_other_x = IsLeft === true ? globalState[2] : globalState[0];
         const Player_other_y = IsLeft === true ? globalState[3] : globalState[1];
-        if (prevX > Player_other_x[0] - 7 && prevX < Player_other_x[0] + 7 && y > Player_other_y[0] - 10 && y < Player_other_y[0] + 10) {
+        console.log("Player_other_y: " + Player_other_y[0]);
+        if (prevX > Player_other_x[0] && prevX < Player_other_x[0] + 6 && y > Player_other_y[0] && y < Player_other_y[0] + 20) {
             console.log("hit");
             Health_other[1](Health_other[0] - 10)
             return -100;
