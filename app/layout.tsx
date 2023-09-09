@@ -43,6 +43,11 @@ export default function RootLayout({
   const [player1X, setPlayer1X] = React.useState(0);
   const [player1Y, setPlayer1Y] = React.useState(0);
 
+  const [player0Health, setPlayer0Health] = React.useState(100);
+  const [player1Health, setPlayer1Health] = React.useState(100);
+
+
+
   return (
     <html className="w-screen h-screen overflow-hidden" lang="en">
       <body className={`${inter.className} w-full h-full`}>
@@ -51,6 +56,8 @@ export default function RootLayout({
             [player0Y, setPlayer0Y],
             [player1X, setPlayer1X],
             [player1Y, setPlayer1Y],
+            [player0Health, setPlayer0Health],
+            [player1Health, setPlayer1Health],
         ]}>
             {children}
         </GlobalStateContext.Provider>

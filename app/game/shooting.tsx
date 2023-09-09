@@ -2,15 +2,14 @@
 
 import React from "react";
 import Image from "next/image";
+import { GlobalStateContext } from "../layout";
 
 export default function Projectile({startX, startY, IsLeft}: {startX: number, startY: number, IsLeft: boolean}) {
     const elem = React.useRef(null);
     const [x, set_x] = React.useState(0);
     const [y, set_y] = React.useState(0);
-    let speed = 1;
-    if (IsLeft === false) {
-        speed = -1;
-    }
+    const globalState = React.useContext(GlobalStateContext);
+    const speed = IsLeft === true ? 1 : -1;
 
     if (x === 0 && y === 0)
     {
@@ -24,26 +23,44 @@ export default function Projectile({startX, startY, IsLeft}: {startX: number, st
             set_y(startY + 10);
         }
     }
-    const client_width = window.innerWidth
-    const client_height = window.innerHeight
+
+    const Health_other = IsLeft === true ? globalState[5] : globalState[4];
+
 
     React.useEffect(() => {
-
-        if  (x > client_width || x < 0) { 
-            //@ts-ignore
-            elem.current?.remove();
-        }
-        if  (y > client_height || y < 0) {
-            //@ts-ignore
-            elem.current?.remove();
-        }
-
         const interval = setInterval(() => {
-            set_x(x + speed);
+            set_x(prevX => {
+                const newX = UpdateX(prevX);
+                
+                // Check condition here, and clear interval if condition is met
+                if (newX >= 100 || newX <= 1) {
+                    clearInterval(interval);
+                    //@ts-ignore
+                    elem.current?.remove();
+                    return false
+                }
+    
+                return newX;
+            });
         }, 30);
-
+    
+        // This will clear the interval when the component is unmounted
         return () => clearInterval(interval);
-    }, [x]);
+    
+    }, [x]);  
+    
+    function UpdateX(prevX: number): number {
+        // console.log("prevX: " + prevX);
+        const Player_other_x = IsLeft === true ? globalState[2] : globalState[0];
+        const Player_other_y = IsLeft === true ? globalState[3] : globalState[1];
+        if (prevX > Player_other_x[0] - 7 && prevX < Player_other_x[0] + 7 && y > Player_other_y[0] - 10 && y < Player_other_y[0] + 10) {
+            console.log("hit");
+            Health_other[1](Health_other[0] - 10)
+            return -100;
+        }
+
+        return prevX + speed;
+    }
 
     return ( 
 
