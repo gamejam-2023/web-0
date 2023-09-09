@@ -219,9 +219,9 @@ function Player(props: PlayerProps) {
             health[1](health[0] - 5);
             velocity.y = velocity.y * -1;
         }
-        if (prevY > 75)
+        if (prevY > 83)
         {
-            useRouter().push(`/game/over?url=/?refresh=true&loser=${props.id}`);
+            useRouter().push(`/game/over?loser=${props.id}`);
         }
 
         // if (props.IsLeft === true) {
@@ -244,7 +244,7 @@ function Player(props: PlayerProps) {
 
     function getHealthColor(health: number): string {
         if (health <= 0) {
-            useRouter().push(`/game/over?url=/?refresh=true&loser=${props.id}`);
+            useRouter().push(`/game/over?loser=${props.id}`);
         }
 
         if (health > 60) {

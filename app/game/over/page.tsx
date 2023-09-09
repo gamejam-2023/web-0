@@ -26,10 +26,11 @@ export default function Home() {
     return (
         <main className="w-full h-full">
             <div className="absolute top-0 left-0 w-full h-full z-10 bg-black">
-                <Link href={url} className="absolute top-8 left-8 w-16 h-16 text-3xl">{"<-"}</Link>
+                {/* <Link href={url} className="absolute top-8 left-8 w-16 h-16 text-3xl">{"<-"}</Link> */}
+                <a href={url} className="absolute top-8 left-8 w-16 h-16 text-3xl">{"<-"}</a>
                 <div className="flex justify-center items-center w-full h-full">
                     {loser.length > 0 &&
-                        <h2 className="font-semibold text-5xl text-amber-500">{loser.toUpperCase()} LOST</h2>
+                        <h2 className="font-semibold text-5xl text-red-500">{loser.toUpperCase()} LOST</h2>
                     }
                 </div>
             </div>
