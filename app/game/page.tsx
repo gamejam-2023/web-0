@@ -199,7 +199,7 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
 function Background() {
     return (
         <>
-            <Image className="absolute w-screen h-screen" src={"/img/BgCore.png"} alt={""} layout='fill'/>
+            <Image className="absolute w-screen h-screen" src={"/img/BgCore2.png"} alt={""} layout='fill'/>
         </>
     );
 }
