@@ -7,16 +7,6 @@ import { GlobalStateContext } from "../layout";
 import { cwd } from "process";
 // import {Input} from "../lib/Input.js";
 
-//keep track of players position
-const player_0 = {
-    x: 0,
-    y: 0,
-}
-const player_1 = {
-    x: 0,
-    y: 0,
-}
-
 function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
     interface ProjectileData {
         startX: number;
@@ -27,6 +17,8 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
     const [y, set_y] = React.useState(0);
     const [projectiles, setProjectiles] = React.useState<ProjectileData[]>([]);  // <-- Explicitly type the state
     const [velocity, setVelocity] = React.useState({ x: 0, y: 0 });
+
+    const boat_current = IsLeft === true ? "/img/BoatBlue.png" : "/img/BoatRed.png";
 
     
     const globalState = React.useContext(GlobalStateContext);
@@ -50,6 +42,7 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
     };
     
     const health = IsLeft === true ? globalState[4] : globalState[5];
+    const health_other = IsLeft === true ? globalState[5] : globalState[4];
     
     const healthBarStyle = {
         height: '100%',
@@ -181,12 +174,12 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
             velocity.y = velocity.y * -1;
         }
 
-        if (IsLeft === true) {
-            player_0.y = prevY;
-        }
-        else {
-            player_1.y = prevY;
-        }
+        // if (IsLeft === true) {
+        //     player_0.y = prevY;
+        // }
+        // else {
+        //     player_1.y = prevY;
+        // }
         velocity.y = velocity.y + PullForce;
 
         if (IsLeft === true) {
@@ -240,9 +233,17 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
                 onKeyDown={(event) => {handleKeydown(event, x, y)}}
                 tabIndex={0}
             >
+                
                 <Image
                     className="absolute"
                     src={"/img/BoatWaterMove3.png"}
+                    alt={""}
+                    layout="fill"
+                />
+                
+                 <Image
+                    className="absolute"
+                    src={boat_current}
                     alt={""}
                     layout="fill"
                 />
@@ -260,7 +261,7 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
             {/* </div> */}
             </span>
             {projectiles?.map((proj, index) => (
-                <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={IsLeft} />
+                <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={IsLeft} health_other={health_other} />
             ))}
         </>
     );
@@ -269,7 +270,7 @@ function Player({id, IsLeft}: {id: string, IsLeft: boolean}) {
 }
 
 function Background() {
-    return (
+    return ( 
         <>
             <div className="relative w-screen h-screen overflow-hidden"> {/* Container for the waves */}
                 <Image className="absolute w-screen h-screen" src={"/img/BgOnlt.png"} alt={""} layout='fill'/>
