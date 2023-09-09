@@ -3,7 +3,7 @@
 import React, { ReactHTMLElement } from "react";
 import Image from "next/image";
 import Projectile from "./shooting";
-import {Input} from "../lib/Input.js";
+// import {Input} from "../lib/Input.js";
 
 function Player({id}: {id: string}) {
     interface ProjectileData {
@@ -17,7 +17,7 @@ function Player({id}: {id: string}) {
     const [projectiles, setProjectiles] = React.useState<ProjectileData[]>([]);  // <-- Explicitly type the state
     const [velocity, setVelocity] = React.useState({ x: 0, y: 0 });
 
-    const MOVE_AMOUNT = 2;
+    const MOVE_AMOUNT = 0.1;
     // const FRICTION = 0.97;   
     const MaxSpeed = 10;
     // const VelocityTreshold = 0.1;
@@ -30,8 +30,9 @@ function Player({id}: {id: string}) {
         KeyD: { x: MOVE_AMOUNT, y: 0 },
     };
 
-    const client_width = window.innerWidth
-    const client_height = window.innerHeight
+    let client_width = window.innerWidth
+    let client_height = window.innerHeight
+    let client_width_half = client_width / 2
 
     // React.useEffect(() => {
     //     var elem_input = Input(elem);
@@ -71,56 +72,57 @@ function Player({id}: {id: string}) {
         }
     }, []);
 
+    function UpdateX(prevX: number): number {
+        client_width = window.innerWidth;
+        client_height = window.innerHeight;
+        client_width_half = client_width / 2;
+        if (prevX < -1)
+        {
+            velocity.x = velocity.x * -1;
+        }
+        if (prevX > 40)
+        {
+            velocity.x = velocity.x * -1;
+        }
+        console.log(prevX);
+        return prevX + velocity.x;
+    }
+
+    function UpdateY(prevY: number): number {
+        if (prevY < -1)
+        {
+            velocity.y = velocity.y * -1;
+        }
+        if (prevY > 75)
+        {
+            //lose game
+            velocity.y = velocity.y * -1;
+        }
+        return prevY + velocity.y;
+    }
+
     React.useEffect(() => {
-          
-        // if (Math.abs(velocity.x) < VelocityTreshold) velocity.x = 0;
-        // else (velocity.x = velocity.x * FRICTION)
-        // if (Math.abs(velocity.y) < VelocityTreshold) velocity.y = 0;
-        // else (velocity.y = velocity.y * FRICTION)
+
         const interval = setInterval(() => {
-            if (x < client_width+100 || x > 100) { 
-                velocity.x = velocity.x * -1;
-            }
-            if (y < client_height || y > 0) {
-                velocity.y = velocity.y * -1;
-            }
-            // velocity.y = velocity.y + PullForce;
-            set_x(prevX => prevX + velocity.x);
-            set_y(prevY => prevY + velocity.y);
+            set_x(prevX => UpdateX(prevX));
+            set_y(prevY => UpdateY(prevY));
         }, 30);
 
-        // const loop = () => {
-        //     // if (!running) return;
-
-            
-        //     // Apply friction
-            
-
-        //     // setVelocity(prev => ({
-        //     //     x: prev.x * FRICTION,
-        //     //     y: prev.y * FRICTION
-        //     // }));
-
-        //     set_x(prevX => prevX + velocity.x);
-        //     set_y(prevY => prevY + velocity.y);
-            
-        //     requestAnimationFrame(loop);
-        // };
         
-        // loop();  // Start the loop
         return () => clearInterval(interval);
     }, [velocity]);
 
     return (
         <>
             <span
+                id = {"player"}
                 ref={elem}
                 className="absolute outline-none"
                 style={{
                     width: "8%",
                     height: "25%",
-                    left: `${x / 20}%`,
-                    top: `${y / 20}%`,
+                    left: `${x}%`,
+                    top: `${y}%`,
                     willChange: `transform, top, left`,
                 }}
                 onKeyDown={(event) => {handleKeydown(event, x, y)}}
@@ -138,6 +140,8 @@ function Player({id}: {id: string}) {
             ))}dd
         </>
     );
+
+
 }
 
 function Background() {

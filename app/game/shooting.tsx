@@ -8,20 +8,22 @@ export default function Projectile({startX, startY, IsLeft}: {startX: number, st
     const elem = React.useRef(null);
     const [x, set_x] = React.useState(0);
     const [y, set_y] = React.useState(0);
-    let speed = 20;
+    let speed = 1;
     if (IsLeft === false) {
-        speed = -20;
+        speed = -1;
     }
 
-    if (x == 0 && y == 0)
+    if (x === 0 && y === 0)
     {
         if (IsLeft === true) {
-            set_x(startX + 100);
+            set_x(startX + 5);
+            set_y(startY + 10);
+
         }
         else {
-            set_x(startX - 100);
+            set_x(startX - 5);
+            set_y(startY - 10);
         }
-        set_y(startY);
     }
     const client_width = window.innerWidth
     const client_height = window.innerHeight
@@ -63,8 +65,8 @@ export default function Projectile({startX, startY, IsLeft}: {startX: number, st
         style={{
             width: "8%",
             height: "25%",
-            left: `${x / 20}%`,
-            top: `${y / 20}%`,
+            left: `${x}%`,
+            top: `${y}%`,
             // transform: `translate3d(${x}px, ${y}px, 0px)`,
             willChange: `left, top`,
             // transition: `transform 300ms ease`
