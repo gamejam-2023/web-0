@@ -56,12 +56,6 @@ interface ShootEffectProps {
 }
 
 function Player(props: PlayerProps) {
-
-
-    const INITIAL_POSITION = React.useMemo(() => (
-        props.IsLeft ? { x: 20, y: 20 } : { x: 80, y: 20 }
-    ), [props.IsLeft]);
-
     const MAX_CANNONBALL_AMO = 5;
     const PullForce = 0.005;
     const RECOIL_FORCE = 0.05;
@@ -69,21 +63,26 @@ function Player(props: PlayerProps) {
     // const { IsLeft, keypressed, id } = props;
 
     const elem = React.useRef<HTMLSpanElement>(null);
-    const [PlayerX, setX] = React.useState(INITIAL_POSITION.x);
-    const [PlayerY, setY] = React.useState(INITIAL_POSITION.y);
     const [projectiles, setProjectiles] = React.useState<ProjectileData[]>([]);
     const [velocity, setVelocity] = React.useState({ x: 0, y: 0 });
     const [isLocked, setLock] = React.useState(false);
     const [CannonBallAmo, setCannonBallAmo] = React.useState(MAX_CANNONBALL_AMO);
 
     const boatSrc = props.IsLeft ? "/img/BoatBlue.png" : "/img/BoatRed.png";
+
     const globalState = React.useContext(GlobalStateContext);
+
     const health = props.IsLeft ? globalState.player0Health : globalState.player1Health;
     const set_health = props.IsLeft ? globalState.setPlayer0Health : globalState.setPlayer1Health;
+
+    const PlayerX = props.IsLeft ? globalState.player0X : globalState.player1X;
+    const PlayerY = props.IsLeft ? globalState.player0Y : globalState.player1Y;
+
+    const setX = props.IsLeft ? globalState.setPlayer0X : globalState.setPlayer1X;
+    const setY = props.IsLeft ? globalState.setPlayer0Y : globalState.setPlayer1Y;
+
     const [explosion, setExplosion] = React.useState<ExplosionProps[]>([]);
     const [shootEffect, setShootEffect] = React.useState<ShootEffectProps[]>([]);
-
-
 
     const healthBarStyle = {
         height: '100%',
@@ -165,12 +164,6 @@ function Player(props: PlayerProps) {
             prevX = 52;
         }
 
-        if (props.IsLeft === true) {
-            globalState.setPlayer0X(prevX + velocity.x)
-        }
-        else {
-            globalState.setPlayer1X(prevX + velocity.x)
-        }
         return prevX + velocity.x;
     }
 
@@ -185,12 +178,6 @@ function Player(props: PlayerProps) {
 
         velocity.y = velocity.y + PullForce;
 
-        if (props.IsLeft === true) {
-            globalState.setPlayer0Y(prevY + velocity.x)
-        }
-        else {
-            globalState.setPlayer1Y(prevY + velocity.x)
-        }
         return prevY + velocity.y;
     }
 

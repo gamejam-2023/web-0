@@ -38,10 +38,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [player0X, setPlayer0X] = React.useState(0);
-  const [player0Y, setPlayer0Y] = React.useState(0);
-  const [player1X, setPlayer1X] = React.useState(0);
-  const [player1Y, setPlayer1Y] = React.useState(0);
+  const [player0X, setPlayer0X] = React.useState(20);
+  const [player0Y, setPlayer0Y] = React.useState(20);
+  const [player1X, setPlayer1X] = React.useState(80);
+  const [player1Y, setPlayer1Y] = React.useState(20);
 
   const [player0Health, setPlayer0Health] = React.useState(100);
   const [player1Health, setPlayer1Health] = React.useState(100);
