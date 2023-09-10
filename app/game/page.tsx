@@ -7,6 +7,12 @@ import Projectile from "./shooting";
 import { GlobalStateContext } from "../layout";
 import { useRouter } from "next/navigation";
 import Background from "./background";
+import {AudioSystem, IAudio} from '@/lib/AudioSystem';
+
+const themeLoop = '/sfx/theme-loop-1.wav';
+const audio = new Map<string, IAudio>();
+audio.set(themeLoop, new AudioSystem({fileName: themeLoop, volume: 0.15}));
+audio.get(themeLoop)?.play();
 
 // at the top of your original file
 import { handleMovement, Movement, Velocity } from './movement';
