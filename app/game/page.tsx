@@ -261,7 +261,6 @@ function Player(props: PlayerProps) {
             </span>
             {projectiles?.map((proj, index) => (
                 <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={props.IsLeft} setExplosion={setExplosion} />
-
             ))}
 
             {explosion?.map((ex, index) => (

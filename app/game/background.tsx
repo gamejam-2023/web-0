@@ -10,6 +10,7 @@ export function Background() {
                 <Image className="absolute w-screen h-screen wavesAnimation" style={{top: '-100%'}} src={"/img/waves2.png"} alt={"Waves"} layout='fill'/>
                 <Image className="absolute w-screen h-screen" src={"/img/WaterMovingMiddle1.png"} alt={""} layout='fill'/>
                 <Image className="absolute w-screen h-screen WaterMovingMiddle" src={"/img/WaterMovingMiddle2.png"} alt={""} layout='fill'/>
+                <Image className="absolute w-screen h-screen" src={"/img/BgCoreOverlay.png"} alt={""} layout='fill'/>
             </div>
         </>
     );
