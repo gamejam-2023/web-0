@@ -8,6 +8,7 @@ import { GlobalStateContext } from "../layout";
 import { useRouter } from "next/navigation";
 import Background from "./background";
 import {AudioSystem, IAudio} from '@/lib/AudioSystem';
+import Explosion from "./explosion";
 
 const themeLoop = '/sfx/theme-loop-1.wav';
 const audio = new Map<string, IAudio>();
@@ -30,12 +31,19 @@ import { handleMovement, Movement, Velocity } from './movement';
     health: number;
     cannonBallAmmo: number;
   }
+    
+  interface ProjectileData {
+    startX: number;
+    startY: number;
+}
+
+interface ExplosionProps {
+    x: number;
+    y: number;
+}
 
 function Player(props: PlayerProps) {
-    interface ProjectileData {
-        startX: number;
-        startY: number;
-    }
+    
     
     const INITIAL_POSITION = React.useMemo(() => (
         props.IsLeft ? { x: 20, y: 20 } : { x: 80, y: 20 }
@@ -58,6 +66,8 @@ function Player(props: PlayerProps) {
     const boatSrc = props.IsLeft ? "/img/BoatBlue.png" : "/img/BoatRed.png";
     const globalState = React.useContext(GlobalStateContext);
     const health = props.IsLeft ? globalState[4] : globalState[5];
+    const [explosion, setExplosion] = React.useState<ExplosionProps[]>([]);
+
 
 
     const healthBarStyle = {
@@ -242,8 +252,13 @@ React.useEffect(() => {
                 
             </span>
             {projectiles?.map((proj, index) => (
-                <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={props.IsLeft} />
+                <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={props.IsLeft} setExplosion={setExplosion} />
+                
             ))}
+
+            {explosion?.map((ex, index) => (
+                    <Explosion key={index} x={ex.x} y={ex.y} />
+                ))}
         </>
     );
 }

@@ -4,8 +4,10 @@ import React from "react";
 import Image from "next/image";
 import { GlobalStateContext } from "../layout";
 
-export default function Projectile({startX, startY, IsLeft,
-}: {startX: number, startY: number, IsLeft: boolean}) {
+
+
+export default function Projectile({startX, startY, IsLeft, setExplosion
+}: {startX: number, startY: number, IsLeft: boolean, setExplosion: any}) {
     const elem = React.useRef(null);
     const [x, set_x] = React.useState(0);
     const [y, set_y] = React.useState(0);
@@ -58,28 +60,31 @@ export default function Projectile({startX, startY, IsLeft,
         if (prevX > Player_other_x[0] && prevX < Player_other_x[0] + 6 && y > Player_other_y[0] && y < Player_other_y[0] + 20) {
             // console.log("hit");
             Health_other[1](Health_other[0] - 10)
-            return -100;
+            setExplosion(prev => [...prev, { x: prevX, y: y }]);
+            // return -100;
         }
-
+        // console.log(elem.current?.parentNode);
+        //how to set an object inside the parent div
         return prevX + speed;
     }
 
     return ( 
 
-
         <div 
-        ref = {elem}
+            ref = {elem}
 
-        className="absolute"
-        
-        style={{
-            width: "2%",
-            height: "3%",
-            left: `${x}%`,
-            top: `${y}%`,
-            willChange: `left, right`
-        }}>
-            <Image src="/img/CannonBall.png" alt={""} fill={true} />
+            className="absolute"
+            
+            style={{
+                width: "2%",
+                height: "3%",
+                left: `${x}%`,
+                top: `${y}%`,
+                willChange: `left, right`
+            }}>
+                <Image src="/img/CannonBall.png" alt={""} fill={true} />
+                
         </div>
+        
     )
-  }
+  } 
