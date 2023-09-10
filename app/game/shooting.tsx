@@ -3,8 +3,12 @@
 import React from "react";
 import Image from "next/image";
 import { GlobalStateContext } from "../layout";
+import {AudioSystem, IAudio} from "@/lib/AudioSystem";
 
+const audio = new Map<string, IAudio>();
 
+const hitAudio = '/sfx/hit-1.wav';
+audio.set(hitAudio, new AudioSystem({fileName: hitAudio, volume: 1}));
 
 export default function Projectile({startX, startY, IsLeft, setExplosion
 }: {startX: number, startY: number, IsLeft: boolean, setExplosion: any}) {
@@ -59,6 +63,8 @@ export default function Projectile({startX, startY, IsLeft, setExplosion
         // console.log("Player_other_y: " + Player_other_y[0]);
         if (prevX > Player_other_x[0] && prevX < Player_other_x[0] + 6 && y > Player_other_y[0] && y < Player_other_y[0] + 20) {
             // console.log("hit");
+
+            audio.get(hitAudio)?.play();
             Health_other[1](Health_other[0] - 10)
             setExplosion(prev => [...prev, { x: prevX, y: y }]);
             return -100;

@@ -1,6 +1,7 @@
 export interface IAudio
 {
   play(): void;
+  loop(): void;
   stop(): void;
 }
 

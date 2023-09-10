@@ -12,13 +12,6 @@ export default function Explosion(props: ExplosionProps) {
 
     const elem = React.useRef(null);
 
-    React.useEffect(() => {
-        const interval = setInterval(() => {
-            clearInterval(interval);
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
-
     return (
         <div
             ref={elem}

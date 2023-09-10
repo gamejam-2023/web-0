@@ -11,10 +11,15 @@ import {AudioSystem, IAudio} from '@/lib/AudioSystem';
 import Explosion from "./explosion";
 import ShootEffect from "./shootEffect";
 
-const themeLoop = '/sfx/theme-loop-1.wav';
 const audio = new Map<string, IAudio>();
-audio.set(themeLoop, new AudioSystem({fileName: themeLoop, volume: 0.15}));
-audio.get(themeLoop)?.play();
+
+const themeAudio = '/sfx/theme-loop-1.wav';
+audio.set(themeAudio, new AudioSystem({fileName: themeAudio, volume: 0.15}));
+audio.get(themeAudio)?.loop();
+
+const creakAudio = '/sfx/creak-0.wav';
+audio.set(creakAudio, new AudioSystem({fileName: creakAudio, volume: 0.25}));
+audio.get(creakAudio)?.loop();
 
 // at the top of your original file
 import { handleMovement, Movement, Velocity } from './movement';
