@@ -249,7 +249,7 @@ function Player(props: PlayerProps) {
 
                 <Image
                     className="absolute"
-                    src={"/img/BoatWaterMove3.png"}
+                    src={"/img/BoarWaterMove2.png"}
                     alt={""}
                     layout="fill"
                 />
