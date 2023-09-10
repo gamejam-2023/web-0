@@ -74,7 +74,7 @@ export default function Projectile({startX, startY, IsLeft,
         
         style={{
             width: "2%",
-            height: "2%",
+            height: "3%",
             left: `${x}%`,
             top: `${y}%`,
             willChange: `left, right`

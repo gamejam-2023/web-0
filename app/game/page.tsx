@@ -39,7 +39,7 @@ function Player(props: PlayerProps) {
     const PullForce = 0.005;
     const RECOIL_FORCE = 0.05; 
 
-    const { IsLeft, keypressed, id } = props;
+    // const { IsLeft, keypressed, id } = props;
 
     const elem = React.useRef<HTMLSpanElement>(null);
     const [PlayerX, setX] = React.useState(INITIAL_POSITION.x);
@@ -49,9 +49,9 @@ function Player(props: PlayerProps) {
     const [isLocked, setLock] = React.useState(false);
     const [CannonBallAmo, setCannonBallAmo] = React.useState(MAX_CANNONBALL_AMO);
 
-    const boatSrc = IsLeft ? "/img/BoatBlue.png" : "/img/BoatRed.png";
+    const boatSrc = props.IsLeft ? "/img/BoatBlue.png" : "/img/BoatRed.png";
     const globalState = React.useContext(GlobalStateContext);
-    const health = IsLeft ? globalState[4] : globalState[5];
+    const health = props.IsLeft ? globalState[4] : globalState[5];
 
 
     const healthBarStyle = {
@@ -67,7 +67,7 @@ function Player(props: PlayerProps) {
             setProjectiles(prev => [...prev, { startX: PlayerX, startY: PlayerY }]);
             setCannonBallAmo(prev => prev - 1);
             
-            if (IsLeft) {
+            if (props.IsLeft) {
                 setX(prev => prev - 0.2);
                 setVelocity(prev => ({
                     x: prev.x - RECOIL_FORCE,  // Push the player to the left when they are on the left side
@@ -88,10 +88,10 @@ function Player(props: PlayerProps) {
     };
 
     React.useEffect(() => {
-        handleMovement(keypressed, IsLeft, velocity, setVelocity);
-        if (keypressed.Space && IsLeft) fire();
-        if (keypressed.Enter && !IsLeft) fire();
-    }, [keypressed]);
+        handleMovement(props.keypressed, props.IsLeft, velocity, setVelocity);
+        if (props.keypressed.Space && props.IsLeft) fire();
+        if (props.keypressed.Enter && !props.IsLeft) fire();
+    }, [props.keypressed]);
 
     function reloadConnonBalls() {
         setLock(true);
@@ -113,23 +113,32 @@ function Player(props: PlayerProps) {
         }
     }
 
-    function UpdateX(prevX: number): number {
-        if (prevX < -3 || prevX > 94)
+    function UpdateX(prevX: number) {
+        if (prevX < -3 && props.IsLeft === true)
         {
             health[1](health[0] - 5);
-            // console.log(globalState[4][0]);
             velocity.x = velocity.x * -1;
+            prevX = -3;
+        }
+        if (prevX > 94 && props.IsLeft === false)
+        {
+            health[1](health[0] - 5);
+            velocity.x = velocity.x * -1;
+            prevX = 94;
         }
         if (prevX > 40 && props.IsLeft === true)
         {
             health[1](health[0] - 5);
             velocity.x = velocity.x * -1;
+            prevX = 40;
         }
         if (prevX < 52 && props.IsLeft === false)
         {
             health[1](health[0] - 5);
             velocity.x = velocity.x * -1;
+            prevX = 52;
         }
+
         if (props.IsLeft === true) {
             globalState[0][1](prevX + velocity.x)
         }
