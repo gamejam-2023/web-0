@@ -195,7 +195,9 @@ function Player(props: PlayerProps) {
 
     React.useEffect(() => {
 
-    if (health > 60) {}
+    if (health > 60) {
+
+    }
     else if (health > 25) {
         if (boatSrc !== "/img/BoatBlueDamaged.png" || boatSrc !== "/img/BoatRedDamaged.png" )
         {
@@ -271,9 +273,9 @@ function Player(props: PlayerProps) {
                 <ShootEffect key={index} x={ex.x} y={ex.y} Isleft={props.IsLeft} />
             ))}
 
-            {projectiles?.map((_, index) => (
+            {/* {projectiles?.map((_, index) => (
                 <RandomObjSpawn key={index}/>
-            ))}
+            ))} */}
 
         </>
     );
