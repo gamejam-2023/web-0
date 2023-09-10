@@ -21,6 +21,9 @@ const creakAudio = '/sfx/creak-0.wav';
 audio.set(creakAudio, new AudioSystem({ fileName: creakAudio, volume: 0.25 }));
 audio.get(creakAudio)?.loop();
 
+const shotAudio = '/sfx/shot-1.wav';
+audio.set(shotAudio, new AudioSystem({ fileName: shotAudio, volume: 1 }));
+
 // at the top of your original file
 import { handleMovement, Movement, Velocity } from './movement';
 import RandomObjSpawn from "./RandomOpjSpawn";
@@ -93,6 +96,8 @@ function Player(props: PlayerProps) {
 
     const fire = () => {
         if (CannonBallAmo > 0) {
+            audio.get(shotAudio)?.play();
+
             setShootEffect(prev => [...prev, { x: PlayerX, y: PlayerY }])
             setProjectiles(prev => [...prev, { startX: PlayerX, startY: PlayerY }]);
             setCannonBallAmo(prev => prev - 1);
