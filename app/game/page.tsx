@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Background from "./background";
 import {AudioSystem, IAudio} from '@/lib/AudioSystem';
 import Explosion from "./explosion";
+import ShootEffect from "./shootEffect";
 
 const themeLoop = '/sfx/theme-loop-1.wav';
 const audio = new Map<string, IAudio>();
@@ -42,6 +43,11 @@ interface ExplosionProps {
     y: number;
 }
 
+interface ShootEffectProps {
+    x: number;
+    y: number;
+}
+
 function Player(props: PlayerProps) {
     
     
@@ -67,6 +73,7 @@ function Player(props: PlayerProps) {
     const globalState = React.useContext(GlobalStateContext);
     const health = props.IsLeft ? globalState[4] : globalState[5];
     const [explosion, setExplosion] = React.useState<ExplosionProps[]>([]);
+    const [shootEffect, setShootEffect] = React.useState<ShootEffectProps[]>([]);
 
 
 
@@ -80,6 +87,7 @@ function Player(props: PlayerProps) {
 
     const fire = () => {
         if (CannonBallAmo > 0){
+            setShootEffect(prev => [...prev, { x: PlayerX, y: PlayerY }])
             setProjectiles(prev => [...prev, { startX: PlayerX, startY: PlayerY }]);
             setCannonBallAmo(prev => prev - 1);
             
@@ -258,6 +266,10 @@ React.useEffect(() => {
 
             {explosion?.map((ex, index) => (
                     <Explosion key={index} x={ex.x} y={ex.y} />
+                ))}
+
+            {shootEffect?.map((ex, index) => (
+                    <ShootEffect key={index} x={ex.x} y={ex.y} />
                 ))}
         </>
     );

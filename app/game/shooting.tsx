@@ -61,7 +61,7 @@ export default function Projectile({startX, startY, IsLeft, setExplosion
             // console.log("hit");
             Health_other[1](Health_other[0] - 10)
             setExplosion(prev => [...prev, { x: prevX, y: y }]);
-            // return -100;
+            return -100;
         }
         // console.log(elem.current?.parentNode);
         //how to set an object inside the parent div

@@ -1,13 +1,12 @@
 import React from "react";
 import Image from "next/image";
 
-interface ExplosionProps {
+interface ShootEffectProps {
     x: number;
     y: number;
-    
 }
 
-export default function Explosion(props: ExplosionProps) {
+export default function ShootEffect(props: ShootEffectProps) {
     // set a time of 1 seconds when the when the 1 second is up, remove the explosion
 
     const elem = React.useRef(null);
@@ -27,13 +26,13 @@ export default function Explosion(props: ExplosionProps) {
                 left: `${props.x}%`,
                 top: `${props.y}%`,
                 width: "5%",   // You can adjust the size
-                height: "7%",  // You can adjust the size
+                height: "5%",  // You can adjust the size
                 zIndex: 10,
             }}
         >
             <Image
                 className="absolute w-screen h-screen explosionAnimation"
-                src="/img/HitExplosion.png"
+                src="/img/ShootEffect.png"
                 alt="Explosion"
                 layout="fill"
             />
