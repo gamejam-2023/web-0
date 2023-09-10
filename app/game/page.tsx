@@ -51,6 +51,7 @@ interface ExplosionProps {
 interface ShootEffectProps {
     x: number;
     y: number;
+    Isleft: boolean;
 }
 
 function Player(props: PlayerProps) {
@@ -274,7 +275,7 @@ React.useEffect(() => {
                 ))}
 
             {shootEffect?.map((ex, index) => (
-                    <ShootEffect key={index} x={ex.x} y={ex.y} />
+                    <ShootEffect key={index} x={ex.x} y={ex.y} Isleft={props.IsLeft} />
                 ))}
         </>
     );
