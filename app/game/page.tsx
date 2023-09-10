@@ -8,29 +8,13 @@ import Image from "next/image";
 import Projectile from "./shooting";
 import { GlobalStateContext } from "../layout";
 import { useRouter } from "next/navigation";
-
-interface Movement {
-    ArrowDown: boolean;
-    ArrowUp: boolean;
-    ArrowLeft: boolean;
-    ArrowRight: boolean;
-    KeyS: boolean;
-    KeyW: boolean;
-    KeyA: boolean;
-    KeyD: boolean;
-    Space: boolean;
-    Enter: boolean;
-  }
+// at the top of your original file
+import { handleMovement, Movement, Velocity } from './movement';
   
   interface PlayerProps {
     id: string;
     IsLeft: boolean;
     keypressed: Movement;
-  }
-  
-  interface Velocity {
-    x: number;
-    y: number;
   }
   
   interface GameState {
@@ -40,39 +24,6 @@ interface Movement {
     health: number;
     cannonBallAmmo: number;
   }
-
-  const handleMovement = (
-    keys: Movement,
-    isLeft: boolean,
-    velocity: Velocity,
-    setVelocity: React.Dispatch<React.SetStateAction<Velocity>>
-  ) => {
-    const MOVE_AMOUNT = 0.1;
-    const directions: { [key: string]: { x: number; y: number } } = {
-      ArrowDown: { x: 0, y: MOVE_AMOUNT },
-      ArrowUp: { x: 0, y: -MOVE_AMOUNT },
-      ArrowLeft: { x: -MOVE_AMOUNT, y: 0 },
-      ArrowRight: { x: MOVE_AMOUNT, y: 0 },
-      KeyS: { x: 0, y: MOVE_AMOUNT },
-      KeyW: { x: 0, y: -MOVE_AMOUNT },
-      KeyA: { x: -MOVE_AMOUNT, y: 0 },
-      KeyD: { x: MOVE_AMOUNT, y: 0 },
-    };
-
-
-  const updateDir = isLeft
-  ? ["KeyS", "KeyW", "KeyA", "KeyD"]
-  : ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
-
-updateDir.forEach((dir) => {
-  if (keys[dir as keyof Movement]) {
-    setVelocity((prev) => ({
-      x: prev.x + directions[dir].x,
-      y: prev.y + directions[dir].y,
-    }));
-  }
-});
-};
 
 function Player(props: PlayerProps) {
     interface ProjectileData {
@@ -176,17 +127,14 @@ function Player(props: PlayerProps) {
         {
             health[1](health[0] - 5);
             velocity.x = velocity.x * -1;
-    }
-
-// console.log(prevX);
+        }
         if (props.IsLeft === true) {
             globalState[0][1](prevX + velocity.x)
         }
         else {
             globalState[2][1](prevX + velocity.x)
         }
-
-return prevX + velocity.x;
+        return prevX + velocity.x;
     }
 
     function UpdateY(prevY: number): number {
@@ -198,19 +146,19 @@ return prevX + velocity.x;
         if (prevY > 83)
         {
         useRouter().push(`/game/over?loser=${props.id}`);
+        }
+
+            velocity.y = velocity.y + PullForce;
+
+        if (props.IsLeft === true) {
+            globalState[1][1](prevY + velocity.x)
+        }
+        else {
+            globalState[3][1](prevY + velocity.x)
+        }
+        return prevY + velocity.y;
     }
 
-        velocity.y = velocity.y + PullForce;
-
-    if (props.IsLeft === true) {
-        globalState[1][1](prevY + velocity.x)
-    }
-    else {
-        globalState[3][1](prevY + velocity.x)
-    }
-
-return prevY + velocity.y;
-}
     function getHealthColor(health: number): string {
         if (health <= 0) {
             useRouter().push(`/game/over?loser=${props.id}`);
