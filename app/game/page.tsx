@@ -34,14 +34,6 @@ interface PlayerProps {
     keypressed: Movement;
 }
 
-interface GameState {
-    x: number;
-    y: number;
-    velocity: Velocity;
-    health: number;
-    cannonBallAmmo: number;
-}
-
 interface ProjectileData {
     startX: number;
     startY: number;
@@ -70,8 +62,9 @@ function Player(props: PlayerProps) {
     const [velocity, setVelocity] = React.useState({ x: 0, y: 0 });
     const [isLocked, setLock] = React.useState(false);
     const [CannonBallAmo, setCannonBallAmo] = React.useState(MAX_CANNONBALL_AMO);
+    const [randomObj, setRandomObj] = React.useState(null);
 
-    const boatSrc = props.IsLeft ? "/img/BoatBlue.png" : "/img/BoatRed.png";
+    const [boatSrc, setboatSrc] = React.useState(props.IsLeft ? "/img/BoatBlue.png" : "/img/BoatRed.png");
 
     const globalState = React.useContext(GlobalStateContext);
 
@@ -201,6 +194,19 @@ function Player(props: PlayerProps) {
     }
 
     React.useEffect(() => {
+
+    if (health > 60) {}
+    else if (health > 25) {
+        if (boatSrc !== "/img/BoatBlueDamaged.png" || boatSrc !== "/img/BoatRedDamaged.png" )
+        {
+            setboatSrc(props.IsLeft ? "/img/BoatBlueDamaged.png" : "/img/BoatRedDamaged.png");
+        }
+    } else {
+        if (boatSrc !== "/img/BoatBlueVeryDamaged.png" || boatSrc !== "/img/BoatRedVeryDamaged.png" )
+        {
+            setboatSrc(props.IsLeft ? "/img/BoatBlueVeryDamaged.png" : "/img/BoatRedVeryDamaged.png");
+        }
+    }
         const interval = setInterval(() => {
             setX(prevX => UpdateX(prevX));
             setY(prevY => UpdateY(prevY));
@@ -215,7 +221,7 @@ function Player(props: PlayerProps) {
                 left: `${PlayerX}%`,
                 top: `${PlayerY}%`,
 
-                
+
                 color: 'white'
             }}>{CannonBallAmo}</span>
 
@@ -265,7 +271,9 @@ function Player(props: PlayerProps) {
                 <ShootEffect key={index} x={ex.x} y={ex.y} Isleft={props.IsLeft} />
             ))}
 
-            <RandomObjSpawn IsLeft={true} />
+            {projectiles?.map((_, index) => (
+                <RandomObjSpawn key={index}/>
+            ))}
 
         </>
     );
