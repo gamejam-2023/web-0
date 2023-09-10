@@ -74,14 +74,11 @@ updateDir.forEach((dir) => {
 });
 };
 
-
-
 function Player(props: PlayerProps) {
     interface ProjectileData {
         startX: number;
         startY: number;
     }
-    
     
     const INITIAL_POSITION = React.useMemo(() => (
         props.IsLeft ? { x: 20, y: 20 } : { x: 80, y: 20 }
@@ -89,6 +86,7 @@ function Player(props: PlayerProps) {
 
     const MAX_CANNONBALL_AMO = 5;
     const PullForce = 0.005;
+    const RECOIL_FORCE = 0.2; 
 
     const { IsLeft, keypressed, id } = props;
 
@@ -112,12 +110,25 @@ function Player(props: PlayerProps) {
         transition: 'width 0.3s ease'
     };
 
+
     const fire = () => {
         if (CannonBallAmo > 0){
             setProjectiles(prev => [...prev, { startX: PlayerX, startY: PlayerY }]);
             setCannonBallAmo(prev => prev - 1);
-            if (!isLocked)
-            {
+            
+            if (IsLeft) {
+                setVelocity(prev => ({
+                    x: prev.x - RECOIL_FORCE,  // Push the player to the left when they are on the left side
+                    y: prev.y
+                }));
+            } else {
+                setVelocity(prev => ({
+                    x: prev.x + RECOIL_FORCE,  // Push the player to the right when they are on the right side
+                    y: prev.y
+                }));
+            }
+
+            if (!isLocked) {
                 reloadConnonBalls();
             }
         }

@@ -43,7 +43,7 @@ export default function Projectile({startX, startY, IsLeft,
     
                 return newX;
             });
-        }, 30);
+        }, 40);
     
         // This will clear the interval when the component is unmounted
         return () => clearInterval(interval);
@@ -68,16 +68,8 @@ export default function Projectile({startX, startY, IsLeft,
 
 
         <div 
-        // ref={elem.current}
         ref = {elem}
-        // className="absolute outline-none"
-        //         style={{
-        //             width: "8%",
-        //             height: "25%",
-        //             left: `${x / 20}%`,
-        //             top: `${y / 20}%`,
-        //             willChange: `transform, top, left`,
-        //         }}
+
         className="absolute"
         
         style={{
@@ -85,9 +77,7 @@ export default function Projectile({startX, startY, IsLeft,
             height: "2%",
             left: `${x}%`,
             top: `${y}%`,
-            // transform: `translate3d(${x}px, ${y}px, 0px)`,
             willChange: `left, right`
-            // transition: `transform 300ms ease`
         }}>
             <Image src="/img/CannonBall.png" alt={""} fill={true} />
         </div>
