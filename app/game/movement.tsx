@@ -11,6 +11,7 @@ interface Movement {
     KeyD: boolean;
     Space: boolean;
     Enter: boolean;
+    Escape: boolean;
 }
 
 interface Velocity {

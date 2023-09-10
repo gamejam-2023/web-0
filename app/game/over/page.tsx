@@ -6,7 +6,7 @@ import React from "react";
 
 export default function Home() {
     const searchParams = useSearchParams()
-    const [url, set_url] = React.useState("/game");
+    const [url, set_url] = React.useState("/game/pause");
     const [loser, set_loser] = React.useState("");
 
     React.useEffect(() => {

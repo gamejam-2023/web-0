@@ -24,12 +24,14 @@ function MenuItem(props: MenuItemProps) {
 
 function Menu() {
     return (
-        <div className="flex flex-col gap-4 justify-center items-center w-full h-full">
-            <MenuItem url={"/game"} text={"Play"} className={"bg-neutral-700 hover:bg-emerald-500"} />
-            {/* <MenuItem url={"/game-online"} text={"Play Online"} className={"bg-neutral-700 hover:bg-emerald-500"} /> */}
-            {/* <MenuItem url={"/leaderboard"} text={"Leaderborad"} className={"bg-neutral-700 hover:bg-emerald-500"} /> */}
-            <MenuItem url={"/credits"} text={"Credits"} className={"bg-neutral-700 hover:bg-emerald-500"} />
-        </div>
+        <>
+            <div className="absolute flex flex-col gap-4 justify-center items-center w-full h-full z-10">
+                <MenuItem url={"/game/pause"} text={"Play"} className={"bg-neutral-700 hover:bg-emerald-500"} />
+                {/* <MenuItem url={"/game-online"} text={"Play Online"} className={"bg-neutral-700 hover:bg-emerald-500"} /> */}
+                {/* <MenuItem url={"/leaderboard"} text={"Leaderborad"} className={"bg-neutral-700 hover:bg-emerald-500"} /> */}
+                <MenuItem url={"/credits"} text={"Credits"} className={"bg-neutral-700 hover:bg-emerald-500"} />
+            </div>
+        </>
     );
 }
 
@@ -47,7 +49,7 @@ export default function Home() {
 
     const handleKeyDown = React.useCallback((event: KeyboardEvent) => {
         if (["Space", "Enter", "Escape"].includes(event.code)) {
-            window.location.href = '/game';
+            window.location.href = '/game/pause';
         }
     }, []);
 

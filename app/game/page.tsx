@@ -63,6 +63,7 @@ function Player(props: PlayerProps) {
     const [isLocked, setLock] = React.useState(false);
     const [CannonBallAmo, setCannonBallAmo] = React.useState(MAX_CANNONBALL_AMO);
     const [randomObj, setRandomObj] = React.useState(null);
+    const router = useRouter();
 
     const [boatSrc, setboatSrc] = React.useState(props.IsLeft ? "/img/BoatBlue.png" : "/img/BoatRed.png");
 
@@ -119,6 +120,10 @@ function Player(props: PlayerProps) {
         handleMovement(props.keypressed, props.IsLeft, velocity, setVelocity);
         if (props.keypressed.Space && props.IsLeft) fire();
         if (props.keypressed.Enter && !props.IsLeft) fire();
+
+        if (props.keypressed.Escape) {
+            router.push(`/game/pause`);
+        }
     }, [props.keypressed]);
 
     function reloadConnonBalls() {
@@ -171,7 +176,7 @@ function Player(props: PlayerProps) {
             velocity.y = velocity.y * -1;
         }
         if (prevY > 83) {
-            useRouter().push(`/game/over?loser=${props.id}`);
+            router.push(`/game/over?loser=${props.id}`);
         }
 
         velocity.y = velocity.y + PullForce;
@@ -181,7 +186,7 @@ function Player(props: PlayerProps) {
 
     function getHealthColor(health: number): string {
         if (health <= 0) {
-            useRouter().push(`/game/over?loser=${props.id}`);
+            router.push(`/game/over?loser=${props.id}`);
         }
 
         if (health > 60) {
