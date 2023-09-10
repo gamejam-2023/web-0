@@ -7,38 +7,38 @@ import Projectile from "./shooting";
 import { GlobalStateContext } from "../layout";
 import { useRouter } from "next/navigation";
 import Background from "./background";
-import {AudioSystem, IAudio} from '@/lib/AudioSystem';
+import { AudioSystem, IAudio } from '@/lib/AudioSystem';
 import Explosion from "./explosion";
 import ShootEffect from "./shootEffect";
 
 const audio = new Map<string, IAudio>();
 
 const themeAudio = '/sfx/theme-loop-1.wav';
-audio.set(themeAudio, new AudioSystem({fileName: themeAudio, volume: 0.15}));
+audio.set(themeAudio, new AudioSystem({ fileName: themeAudio, volume: 0.15 }));
 audio.get(themeAudio)?.loop();
 
 const creakAudio = '/sfx/creak-0.wav';
-audio.set(creakAudio, new AudioSystem({fileName: creakAudio, volume: 0.25}));
+audio.set(creakAudio, new AudioSystem({ fileName: creakAudio, volume: 0.25 }));
 audio.get(creakAudio)?.loop();
 
 // at the top of your original file
 import { handleMovement, Movement, Velocity } from './movement';
-  
-  interface PlayerProps {
+
+interface PlayerProps {
     id: string;
     IsLeft: boolean;
     keypressed: Movement;
-  }
-  
-  interface GameState {
+}
+
+interface GameState {
     x: number;
     y: number;
     velocity: Velocity;
     health: number;
     cannonBallAmmo: number;
-  }
-    
-  interface ProjectileData {
+}
+
+interface ProjectileData {
     startX: number;
     startY: number;
 }
@@ -55,15 +55,15 @@ interface ShootEffectProps {
 }
 
 function Player(props: PlayerProps) {
-    
-    
+
+
     const INITIAL_POSITION = React.useMemo(() => (
         props.IsLeft ? { x: 20, y: 20 } : { x: 80, y: 20 }
     ), [props.IsLeft]);
 
     const MAX_CANNONBALL_AMO = 5;
     const PullForce = 0.005;
-    const RECOIL_FORCE = 0.05; 
+    const RECOIL_FORCE = 0.05;
 
     // const { IsLeft, keypressed, id } = props;
 
@@ -93,11 +93,11 @@ function Player(props: PlayerProps) {
 
 
     const fire = () => {
-        if (CannonBallAmo > 0){
+        if (CannonBallAmo > 0) {
             setShootEffect(prev => [...prev, { x: PlayerX, y: PlayerY }])
             setProjectiles(prev => [...prev, { startX: PlayerX, startY: PlayerY }]);
             setCannonBallAmo(prev => prev - 1);
-            
+
             if (props.IsLeft) {
                 setX(prev => prev - 0.2);
                 setVelocity(prev => ({
@@ -132,8 +132,7 @@ function Player(props: PlayerProps) {
         }, 3000);
     }
 
-    if (PlayerX === 0 && PlayerY === 0)
-    {
+    if (PlayerX === 0 && PlayerY === 0) {
         if (props.IsLeft === true) {
             setX(20);
             setY(20);
@@ -145,26 +144,22 @@ function Player(props: PlayerProps) {
     }
 
     function UpdateX(prevX: number) {
-        if (prevX < -3 && props.IsLeft === true)
-        {
+        if (prevX < -3 && props.IsLeft === true) {
             set_health(health - 5);
             velocity.x = velocity.x * -1;
             prevX = -3;
         }
-        if (prevX > 94 && props.IsLeft === false)
-        {
+        if (prevX > 94 && props.IsLeft === false) {
             set_health(health - 5);
             velocity.x = velocity.x * -1;
             prevX = 94;
         }
-        if (prevX > 40 && props.IsLeft === true)
-        {
+        if (prevX > 40 && props.IsLeft === true) {
             set_health(health - 5);
             velocity.x = velocity.x * -1;
             prevX = 40;
         }
-        if (prevX < 52 && props.IsLeft === false)
-        {
+        if (prevX < 52 && props.IsLeft === false) {
             set_health(health - 5);
             velocity.x = velocity.x * -1;
             prevX = 52;
@@ -180,17 +175,15 @@ function Player(props: PlayerProps) {
     }
 
     function UpdateY(prevY: number): number {
-        if (prevY < -1)
-        {
+        if (prevY < -1) {
             set_health(health - 5);
             velocity.y = velocity.y * -1;
         }
-        if (prevY > 83)
-        {
+        if (prevY > 83) {
             useRouter().push(`/game/over?loser=${props.id}`);
         }
 
-            velocity.y = velocity.y + PullForce;
+        velocity.y = velocity.y + PullForce;
 
         if (props.IsLeft === true) {
             globalState.setPlayer0Y(prevY + velocity.x)
@@ -207,15 +200,15 @@ function Player(props: PlayerProps) {
         }
 
         if (health > 60) {
-          return "green";
+            return "green";
         } else if (health > 25) {
-          return "yellow";
+            return "yellow";
         } else {
-          return "red";
+            return "red";
         }
-      }
+    }
 
-React.useEffect(() => {
+    React.useEffect(() => {
         const interval = setInterval(() => {
             setX(prevX => UpdateX(prevX));
             setY(prevY => UpdateY(prevY));
@@ -229,11 +222,11 @@ React.useEffect(() => {
                 // right: '50',
                 left: `${PlayerX}%`,
                 top: `${PlayerY}%`,
-                 color: 'white'
-                 }}>{CannonBallAmo}</span>
-            
+                color: 'white'
+            }}>{CannonBallAmo}</span>
+
             <span
-                id = {"player"}
+                id={"player"}
                 ref={elem}
                 className="absolute outline-none"
                 style={{
@@ -246,15 +239,15 @@ React.useEffect(() => {
                 // onKeyDown={(event) => {handleKeydown(event, x, y)}}
                 tabIndex={0}
             >
-                
+
                 <Image
                     className="absolute"
                     src={"/img/BoatWaterMove3.png"}
                     alt={""}
                     layout="fill"
                 />
-                
-                 <Image
+
+                <Image
                     className="absolute"
                     src={boatSrc}
                     alt={""}
@@ -264,20 +257,20 @@ React.useEffect(() => {
                 <div className="health-bar-container">
                     <div style={healthBarStyle}></div>
                 </div>
-                
+
             </span>
             {projectiles?.map((proj, index) => (
                 <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={props.IsLeft} setExplosion={setExplosion} />
-                
+
             ))}
 
             {explosion?.map((ex, index) => (
-                    <Explosion key={index} x={ex.x} y={ex.y} />
-                ))}
+                <Explosion key={index} x={ex.x} y={ex.y} />
+            ))}
 
             {shootEffect?.map((ex, index) => (
-                    <ShootEffect key={index} x={ex.x} y={ex.y} Isleft={props.IsLeft} />
-                ))}
+                <ShootEffect key={index} x={ex.x} y={ex.y} Isleft={props.IsLeft} />
+            ))}
         </>
     );
 }
@@ -322,7 +315,7 @@ export default function Home() {
     return (
         <main className="w-full h-full">
             <Background />
-            <PlayerController /> 
+            <PlayerController />
         </main>
     )
 }
