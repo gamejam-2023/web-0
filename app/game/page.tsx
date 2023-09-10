@@ -23,6 +23,7 @@ audio.get(creakAudio)?.loop();
 
 // at the top of your original file
 import { handleMovement, Movement, Velocity } from './movement';
+import RandomObjSpawn from "./RandomOpjSpawn";
 
 interface PlayerProps {
     id: string;
@@ -91,7 +92,6 @@ function Player(props: PlayerProps) {
         transition: 'width 0.3s ease'
     };
 
-
     const fire = () => {
         if (CannonBallAmo > 0) {
             setShootEffect(prev => [...prev, { x: PlayerX, y: PlayerY }])
@@ -145,22 +145,22 @@ function Player(props: PlayerProps) {
 
     function UpdateX(prevX: number) {
         if (prevX < -3 && props.IsLeft === true) {
-            set_health(health - 5);
+            set_health(health - 9);
             velocity.x = velocity.x * -1;
             prevX = -3;
         }
         if (prevX > 94 && props.IsLeft === false) {
-            set_health(health - 5);
+            set_health(health - 9);
             velocity.x = velocity.x * -1;
             prevX = 94;
         }
         if (prevX > 40 && props.IsLeft === true) {
-            set_health(health - 5);
+            set_health(health - 9);
             velocity.x = velocity.x * -1;
             prevX = 40;
         }
         if (prevX < 52 && props.IsLeft === false) {
-            set_health(health - 5);
+            set_health(health - 9);
             velocity.x = velocity.x * -1;
             prevX = 52;
         }
@@ -176,7 +176,7 @@ function Player(props: PlayerProps) {
 
     function UpdateY(prevY: number): number {
         if (prevY < -1) {
-            set_health(health - 5);
+            set_health(health - 9);
             velocity.y = velocity.y * -1;
         }
         if (prevY > 83) {
@@ -222,6 +222,8 @@ function Player(props: PlayerProps) {
                 // right: '50',
                 left: `${PlayerX}%`,
                 top: `${PlayerY}%`,
+
+                
                 color: 'white'
             }}>{CannonBallAmo}</span>
 
@@ -270,6 +272,9 @@ function Player(props: PlayerProps) {
             {shootEffect?.map((ex, index) => (
                 <ShootEffect key={index} x={ex.x} y={ex.y} Isleft={props.IsLeft} />
             ))}
+
+            <RandomObjSpawn IsLeft={true} />
+
         </>
     );
 }

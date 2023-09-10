@@ -63,10 +63,10 @@ export default function Projectile({startX, startY, IsLeft, setExplosion
         const Player_other_y = IsLeft === true ? globalState.player1Y : globalState.player0Y;
         // console.log("Player_other_y: " + Player_other_y[0]);
         if (prevX > Player_other_x && prevX < Player_other_x + 6 && y > Player_other_y && y < Player_other_y + 20) {
-            console.log("hit");
+            // console.log("hit");
 
             audio.get(hitAudio)?.play();
-            set_Health_other(Health_other - 10)
+            set_Health_other(Health_other - 12)
             setExplosion(prev => [...prev, { x: prevX, y: y }]);
             return -100;
         }
