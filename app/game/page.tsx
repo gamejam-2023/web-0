@@ -1,13 +1,13 @@
 'use client'
 
 //Nautical Nemeses legit
-//Buccaneer's Bounty
-
 import React from "react";
 import Image from "next/image";
 import Projectile from "./shooting";
 import { GlobalStateContext } from "../layout";
 import { useRouter } from "next/navigation";
+import Background from "./background";
+
 // at the top of your original file
 import { handleMovement, Movement, Velocity } from './movement';
   
@@ -37,7 +37,7 @@ function Player(props: PlayerProps) {
 
     const MAX_CANNONBALL_AMO = 5;
     const PullForce = 0.005;
-    const RECOIL_FORCE = 0.2; 
+    const RECOIL_FORCE = 0.05; 
 
     const { IsLeft, keypressed, id } = props;
 
@@ -68,11 +68,13 @@ function Player(props: PlayerProps) {
             setCannonBallAmo(prev => prev - 1);
             
             if (IsLeft) {
+                setX(prev => prev - 0.2);
                 setVelocity(prev => ({
                     x: prev.x - RECOIL_FORCE,  // Push the player to the left when they are on the left side
                     y: prev.y
                 }));
             } else {
+                setX(prev => prev + 0.2);
                 setVelocity(prev => ({
                     x: prev.x + RECOIL_FORCE,  // Push the player to the right when they are on the right side
                     y: prev.y
@@ -227,20 +229,6 @@ React.useEffect(() => {
             {projectiles?.map((proj, index) => (
                 <Projectile key={index} startX={proj.startX} startY={proj.startY} IsLeft={props.IsLeft} />
             ))}
-        </>
-    );
-}
-
-function Background() {
-    return ( 
-        <>
-            <div className="relative w-screen h-screen overflow-hidden"> {/* Container for the waves */}
-                <Image className="absolute w-screen h-screen" src={"/img/BgOnlt.png"} alt={""} layout='fill'/>
-                <Image className="absolute w-screen h-screen wavesAnimation" src={"/img/waves2.png"} alt={"Waves"} layout='fill'/>
-                <Image className="absolute w-screen h-screen wavesAnimation" style={{top: '-100%'}} src={"/img/waves2.png"} alt={"Waves"} layout='fill'/>
-                <Image className="absolute w-screen h-screen" src={"/img/WaterMovingMiddle1.png"} alt={""} layout='fill'/>
-                <Image className="absolute w-screen h-screen WaterMovingMiddle" src={"/img/WaterMovingMiddle2.png"} alt={""} layout='fill'/>
-            </div>
         </>
     );
 }
