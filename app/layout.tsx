@@ -46,19 +46,25 @@ export default function RootLayout({
   const [player0Health, setPlayer0Health] = React.useState(100);
   const [player1Health, setPlayer1Health] = React.useState(100);
 
-
-
   return (
     <html className="w-screen h-screen overflow-hidden" lang="en">
       <body className={`${inter.className} w-full h-full`}>
-        <GlobalStateContext.Provider value={[
+        {/* <GlobalStateContext.Provider value={[
             [player0X, setPlayer0X],
             [player0Y, setPlayer0Y],
             [player1X, setPlayer1X],
             [player1Y, setPlayer1Y],
             [player0Health, setPlayer0Health],
             [player1Health, setPlayer1Health],
-        ]}>
+        ]}> */}
+        <GlobalStateContext.Provider value={{
+            player0X, setPlayer0X,
+            player0Y, setPlayer0Y,
+            player1X, setPlayer1X,
+            player1Y, setPlayer1Y,
+            player0Health, setPlayer0Health,
+            player1Health, setPlayer1Health,
+        }}>
             {children}
         </GlobalStateContext.Provider>
     </body>

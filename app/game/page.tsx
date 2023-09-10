@@ -77,7 +77,8 @@ function Player(props: PlayerProps) {
 
     const boatSrc = props.IsLeft ? "/img/BoatBlue.png" : "/img/BoatRed.png";
     const globalState = React.useContext(GlobalStateContext);
-    const health = props.IsLeft ? globalState[4] : globalState[5];
+    const health = props.IsLeft ? globalState.player0Health : globalState.player1Health;
+    const set_health = props.IsLeft ? globalState.setPlayer0Health : globalState.setPlayer1Health;
     const [explosion, setExplosion] = React.useState<ExplosionProps[]>([]);
     const [shootEffect, setShootEffect] = React.useState<ShootEffectProps[]>([]);
 
@@ -85,8 +86,8 @@ function Player(props: PlayerProps) {
 
     const healthBarStyle = {
         height: '100%',
-        width: `${health[0]}%`,
-        backgroundColor: getHealthColor(health[0]),
+        width: `${health}%`,
+        backgroundColor: getHealthColor(health),
         transition: 'width 0.3s ease'
     };
 
@@ -146,34 +147,34 @@ function Player(props: PlayerProps) {
     function UpdateX(prevX: number) {
         if (prevX < -3 && props.IsLeft === true)
         {
-            health[1](health[0] - 5);
+            set_health(health - 5);
             velocity.x = velocity.x * -1;
             prevX = -3;
         }
         if (prevX > 94 && props.IsLeft === false)
         {
-            health[1](health[0] - 5);
+            set_health(health - 5);
             velocity.x = velocity.x * -1;
             prevX = 94;
         }
         if (prevX > 40 && props.IsLeft === true)
         {
-            health[1](health[0] - 5);
+            set_health(health - 5);
             velocity.x = velocity.x * -1;
             prevX = 40;
         }
         if (prevX < 52 && props.IsLeft === false)
         {
-            health[1](health[0] - 5);
+            set_health(health - 5);
             velocity.x = velocity.x * -1;
             prevX = 52;
         }
 
         if (props.IsLeft === true) {
-            globalState[0][1](prevX + velocity.x)
+            globalState.setPlayer0X(prevX + velocity.x)
         }
         else {
-            globalState[2][1](prevX + velocity.x)
+            globalState.setPlayer1X(prevX + velocity.x)
         }
         return prevX + velocity.x;
     }
@@ -181,21 +182,21 @@ function Player(props: PlayerProps) {
     function UpdateY(prevY: number): number {
         if (prevY < -1)
         {
-            health[1](health[0] - 5);
+            set_health(health - 5);
             velocity.y = velocity.y * -1;
         }
         if (prevY > 83)
         {
-        useRouter().push(`/game/over?loser=${props.id}`);
+            useRouter().push(`/game/over?loser=${props.id}`);
         }
 
             velocity.y = velocity.y + PullForce;
 
         if (props.IsLeft === true) {
-            globalState[1][1](prevY + velocity.x)
+            globalState.setPlayer0Y(prevY + velocity.x)
         }
         else {
-            globalState[3][1](prevY + velocity.x)
+            globalState.setPlayer1Y(prevY + velocity.x)
         }
         return prevY + velocity.y;
     }
