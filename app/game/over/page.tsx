@@ -35,6 +35,20 @@ export default function Home() {
             window.removeEventListener("keydown", handleKeyDown);
         };
     }, [handleKeyDown]);
+    
+    let winner = (
+        <>
+            <h2 className="font-semibold text-5xl text-blue-500">BLUE WINS</h2>
+        </>
+    );
+
+    if (loser === "player-0") {
+        winner = (
+            <>
+                <h2 className="font-semibold text-5xl text-red-500">RED WINS</h2>
+            </>
+        );
+    }
 
     return (
         <main className="w-full h-full">
@@ -44,7 +58,8 @@ export default function Home() {
                 <div className="flex flex-col gap-8 justify-center items-center w-full h-full">
                     {loser.length > 0 &&
                         <>
-                            <h2 className="font-semibold text-5xl text-red-500">{loser.toUpperCase()} LOST</h2>
+                            {/* <h2 className="font-semibold text-5xl text-red-500">{loser.toUpperCase()} LOST</h2> */}
+                            {winner}
                             <h3 className="font-semibold text-lg text-white">Press SPACE to restart</h3>
                         </>
                     }
