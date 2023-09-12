@@ -1,4 +1,7 @@
 # web-0
+## Play on web
+https://gamejam-2023-web-0.vercel.app/
+
 ## Install and run
 - Install [Node.js](https://nodejs.org/en)
 
