@@ -32,6 +32,9 @@ interface PlayerProps {
     id: string;
     IsLeft: boolean;
     keypressed: Movement;
+    sendMessageDirect?: (message: string) => Promise<void>;
+    chatMessagesObj?: Record<string, string>;
+    userName?: string;
 }
 
 interface ProjectileData {
@@ -50,7 +53,7 @@ interface ShootEffectProps {
     Isleft: boolean;
 }
 
-function Player(props: PlayerProps) {
+export function Player(props: PlayerProps) {
     const MAX_CANNONBALL_AMO = 5;
     const PullForce = 0.005;
     const RECOIL_FORCE = 0.05;
@@ -124,6 +127,7 @@ function Player(props: PlayerProps) {
         if (props.keypressed.Escape) {
             router.push(`/game/pause`);
         }
+        props.sendMessageDirect?.(JSON.stringify(props.keypressed));
     }, [props.keypressed]);
 
     function reloadConnonBalls() {
@@ -286,7 +290,13 @@ function Player(props: PlayerProps) {
     );
 }
 
-export function PlayerController() {
+interface PlayerControllerProps {
+    sendMessageDirect?: (message: string) => Promise<void>;
+    chatMessagesObj?: Record<string, string>;
+    userName?: string;
+}
+
+export function PlayerController(props: PlayerControllerProps) {
     const [keysPressed, setKeysPressed] = React.useState({});
 
     const handleKeyDown = React.useCallback((event: KeyboardEvent) => {
@@ -312,11 +322,17 @@ export function PlayerController() {
                 id={"player-0"}
                 IsLeft={true}
                 keypressed={keysPressed}
+                sendMessageDirect={props.sendMessageDirect}
+                chatMessagesObj={props.chatMessagesObj}
+                userName={props.userName}
             />
             <Player
                 id={"player-1"}
                 IsLeft={false}
                 keypressed={keysPressed}
+                sendMessageDirect={props.sendMessageDirect}
+                chatMessagesObj={props.chatMessagesObj}
+                userName={props.userName}
             />
         </>
     );

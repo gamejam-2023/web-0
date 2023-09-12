@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { io as ClientIO } from "socket.io-client";
-import { Background, Player } from "../game/page";
+import { PlayerController } from "../game/page";
+import { Background } from "../game/background";
 
 interface IChatMessage {
     userName: string;
@@ -165,23 +166,11 @@ const Index: React.FC = () => {
     return (
         <main className="w-full h-full">
             <Background />
-
-            <Player
-                id={"player-0"}
-                isLeft={true}
+            <PlayerController
                 userName={userName}
                 sendMessageDirect={sendMessageDirect}
                 chatMessagesObj={chatMessagesObj}
             />
-            
-            <Player
-                id={"player-1"}
-                isLeft={false}
-                userName={userName}
-                sendMessageDirect={sendMessageDirect}
-                chatMessagesObj={chatMessagesObj}
-            />
-            
         </main>
     )
 
